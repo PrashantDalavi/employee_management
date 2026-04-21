@@ -1921,7 +1921,7 @@ var require_react_dom_development = __commonJS({
         return dispatcher;
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var React3 = require_react(), Internals = {
+      var React12 = require_react(), Internals = {
         d: {
           f: noop,
           r: function() {
@@ -1939,7 +1939,7 @@ var require_react_dom_development = __commonJS({
         },
         p: 0,
         findDOMNode: null
-      }, REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), ReactSharedInternals = React3.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      }, REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), ReactSharedInternals = React12.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       "function" === typeof Map && null != Map.prototype && "function" === typeof Map.prototype.forEach && "function" === typeof Set && null != Set.prototype && "function" === typeof Set.prototype.clear && "function" === typeof Set.prototype.forEach || console.error(
         "React depends on Map and Set built-in types. Make sure that you load a polyfill in older browsers. https://reactjs.org/link/react-polyfills"
       );
@@ -3474,7 +3474,7 @@ var require_react_dom_client_development = __commonJS({
         "number" === type && getActiveElement(node.ownerDocument) === node || node.defaultValue === "" + value || (node.defaultValue = "" + value);
       }
       function validateOptionProps(element, props) {
-        null == props.value && ("object" === typeof props.children && null !== props.children ? React3.Children.forEach(props.children, function(child) {
+        null == props.value && ("object" === typeof props.children && null !== props.children ? React12.Children.forEach(props.children, function(child) {
           null == child || "string" === typeof child || "number" === typeof child || "bigint" === typeof child || didWarnInvalidChild || (didWarnInvalidChild = true, console.error(
             "Cannot infer the option value of complex children. Pass a `value` prop or use a plain string as children to <option>."
           ));
@@ -19106,14 +19106,14 @@ var require_react_dom_client_development = __commonJS({
         ));
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var Scheduler = require_scheduler(), React3 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.element"), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy");
+      var Scheduler = require_scheduler(), React12 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.element"), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy");
       /* @__PURE__ */ Symbol.for("react.scope");
       var REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity");
       /* @__PURE__ */ Symbol.for("react.legacy_hidden");
       /* @__PURE__ */ Symbol.for("react.tracing_marker");
       var REACT_MEMO_CACHE_SENTINEL = /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel");
       /* @__PURE__ */ Symbol.for("react.view_transition");
-      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React3.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
+      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React12.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
         pending: false,
         data: null,
         method: null,
@@ -21901,7 +21901,7 @@ var require_react_dom_client_development = __commonJS({
         }
       };
       (function() {
-        var isomorphicReactPackageVersion = React3.version;
+        var isomorphicReactPackageVersion = React12.version;
         if ("19.2.5" !== isomorphicReactPackageVersion)
           throw Error(
             'Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:\n  - react:      ' + (isomorphicReactPackageVersion + "\n  - react-dom:  19.2.5\nLearn more: https://react.dev/warnings/version-mismatch")
@@ -22965,15 +22965,15 @@ var PrefetchCache = class extends LRUCache {
     super(size, toCacheKey);
     this.prefetchDelay = prefetchDelay;
   }
-  putLater(url, request, ttl) {
+  putLater(url, request2, ttl) {
     this.#prefetchTimeout = setTimeout(() => {
-      request.perform();
-      this.put(url, request, ttl);
+      request2.perform();
+      this.put(url, request2, ttl);
       this.#prefetchTimeout = null;
     }, this.prefetchDelay);
   }
-  put(url, request, ttl = cacheTtl) {
-    super.put(url, request);
+  put(url, request2, ttl = cacheTtl) {
+    super.put(url, request2);
     this.#maxAges[toCacheKey(url)] = new Date((/* @__PURE__ */ new Date()).getTime() + ttl);
   }
   clear() {
@@ -23068,15 +23068,15 @@ var FormSubmission = class _FormSubmission {
     }
   }
   // Fetch request delegate
-  prepareRequest(request) {
-    if (!request.isSafe) {
+  prepareRequest(request2) {
+    if (!request2.isSafe) {
       const token = getCookieValue(getMetaContent("csrf-param")) || getMetaContent("csrf-token");
       if (token) {
-        request.headers["X-CSRF-Token"] = token;
+        request2.headers["X-CSRF-Token"] = token;
       }
     }
-    if (this.requestAcceptsTurboStreamResponse(request)) {
-      request.acceptResponseType(StreamMessage.contentType);
+    if (this.requestAcceptsTurboStreamResponse(request2)) {
+      request2.acceptResponseType(StreamMessage.contentType);
     }
   }
   requestStarted(_request) {
@@ -23090,17 +23090,17 @@ var FormSubmission = class _FormSubmission {
     });
     this.delegate.formSubmissionStarted(this);
   }
-  requestPreventedHandlingResponse(request, response) {
+  requestPreventedHandlingResponse(request2, response) {
     prefetchCache.clear();
     this.result = { success: response.succeeded, fetchResponse: response };
   }
-  requestSucceededWithResponse(request, response) {
+  requestSucceededWithResponse(request2, response) {
     if (response.clientError || response.serverError) {
       this.delegate.formSubmissionFailedWithResponse(this, response);
       return;
     }
     prefetchCache.clear();
-    if (this.requestMustRedirect(request) && responseSucceededWithoutRedirect(response)) {
+    if (this.requestMustRedirect(request2) && responseSucceededWithoutRedirect(response)) {
       const error2 = new Error("Form responses must redirect to another location");
       this.delegate.formSubmissionErrored(this, error2);
     } else {
@@ -23109,11 +23109,11 @@ var FormSubmission = class _FormSubmission {
       this.delegate.formSubmissionSucceededWithResponse(this, response);
     }
   }
-  requestFailedWithResponse(request, response) {
+  requestFailedWithResponse(request2, response) {
     this.result = { success: false, fetchResponse: response };
     this.delegate.formSubmissionFailedWithResponse(this, response);
   }
-  requestErrored(request, error2) {
+  requestErrored(request2, error2) {
     this.result = { success: false, error: error2 };
     this.delegate.formSubmissionErrored(this, error2);
   }
@@ -23149,11 +23149,11 @@ var FormSubmission = class _FormSubmission {
       input.value = this.originalSubmitText;
     }
   }
-  requestMustRedirect(request) {
-    return !request.isSafe && this.mustRedirect;
+  requestMustRedirect(request2) {
+    return !request2.isSafe && this.mustRedirect;
   }
-  requestAcceptsTurboStreamResponse(request) {
-    return !request.isSafe || hasAttribute("data-turbo-stream", this.submitter, this.formElement);
+  requestAcceptsTurboStreamResponse(request2) {
+    return !request2.isSafe || hasAttribute("data-turbo-stream", this.submitter, this.formElement);
   }
   get submitsWith() {
     return this.submitter?.getAttribute("data-turbo-submits-with");
@@ -25071,9 +25071,9 @@ var Visit = class {
     }
   }
   // Fetch request delegate
-  prepareRequest(request) {
+  prepareRequest(request2) {
     if (this.acceptsStreamResponse) {
-      request.acceptResponseType(StreamMessage.contentType);
+      request2.acceptResponseType(StreamMessage.contentType);
     }
   }
   requestStarted() {
@@ -25081,7 +25081,7 @@ var Visit = class {
   }
   requestPreventedHandlingResponse(_request, _response) {
   }
-  async requestSucceededWithResponse(request, response) {
+  async requestSucceededWithResponse(request2, response) {
     const responseHTML = await response.responseHTML;
     const { redirected, statusCode } = response;
     if (responseHTML == void 0) {
@@ -25094,7 +25094,7 @@ var Visit = class {
       this.recordResponse({ statusCode, responseHTML, redirected });
     }
   }
-  async requestFailedWithResponse(request, response) {
+  async requestFailedWithResponse(request2, response) {
     const responseHTML = await response.responseHTML;
     const { redirected, statusCode } = response;
     if (responseHTML == void 0) {
@@ -25535,13 +25535,13 @@ var LinkPrefetchObserver = class {
       prefetchCache.clear();
     }
   };
-  prepareRequest(request) {
-    const link = request.target;
-    request.headers["X-Sec-Purpose"] = "prefetch";
+  prepareRequest(request2) {
+    const link = request2.target;
+    request2.headers["X-Sec-Purpose"] = "prefetch";
     const turboFrame = link.closest("turbo-frame");
     const turboFrameTarget = link.getAttribute("data-turbo-frame") || turboFrame?.getAttribute("target") || turboFrame?.id;
     if (turboFrameTarget && turboFrameTarget !== "_top") {
-      request.headers["Turbo-Frame"] = turboFrameTarget;
+      request2.headers["Turbo-Frame"] = turboFrameTarget;
     }
   }
   // Fetch request interface
@@ -26895,10 +26895,10 @@ var FrameController = class {
     this.formSubmission.start();
   }
   // Fetch request delegate
-  prepareRequest(request, frame = this) {
-    request.headers["Turbo-Frame"] = frame.id;
+  prepareRequest(request2, frame = this) {
+    request2.headers["Turbo-Frame"] = frame.id;
     if (this.currentNavigationElement?.hasAttribute("data-turbo-stream")) {
-      request.acceptResponseType(StreamMessage.contentType);
+      request2.acceptResponseType(StreamMessage.contentType);
     }
   }
   requestStarted(_request) {
@@ -26907,15 +26907,15 @@ var FrameController = class {
   requestPreventedHandlingResponse(_request, _response) {
     this.#resolveVisitPromise();
   }
-  async requestSucceededWithResponse(request, response) {
+  async requestSucceededWithResponse(request2, response) {
     await this.loadResponse(response);
     this.#resolveVisitPromise();
   }
-  async requestFailedWithResponse(request, response) {
+  async requestFailedWithResponse(request2, response) {
     await this.loadResponse(response);
     this.#resolveVisitPromise();
   }
-  requestErrored(request, error2) {
+  requestErrored(request2, error2) {
     console.error(error2);
     this.#resolveVisitPromise();
   }
@@ -26997,9 +26997,9 @@ var FrameController = class {
     }
   }
   async #visit(url) {
-    const request = new FetchRequest(this, FetchMethod.get, url, new URLSearchParams(), this.element);
+    const request2 = new FetchRequest(this, FetchMethod.get, url, new URLSearchParams(), this.element);
     this.#currentFetchRequest?.cancel();
-    this.#currentFetchRequest = request;
+    this.#currentFetchRequest = request2;
     return new Promise((resolve) => {
       this.#resolveVisitPromise = () => {
         this.#resolveVisitPromise = () => {
@@ -27007,7 +27007,7 @@ var FrameController = class {
         this.#currentFetchRequest = null;
         resolve();
       };
-      request.perform();
+      request2.perform();
     });
   }
   #navigateFrame(element, url, submitter2) {
@@ -28182,13 +28182,13 @@ var AttributeObserver = class {
   }
 };
 function add(map, key, value) {
-  fetch(map, key).add(value);
+  fetch2(map, key).add(value);
 }
 function del(map, key, value) {
-  fetch(map, key).delete(value);
+  fetch2(map, key).delete(value);
   prune(map, key);
 }
-function fetch(map, key) {
+function fetch2(map, key) {
   let values = map.get(key);
   if (!values) {
     values = /* @__PURE__ */ new Set();
@@ -30062,13 +30062,802 @@ var hello_controller_default = class extends Controller {
 application.register("hello", hello_controller_default);
 
 // app/javascript/application.js
-var import_react2 = __toESM(require_react());
+var import_react11 = __toESM(require_react());
 var import_client = __toESM(require_client());
 
 // app/javascript/components/App.jsx
+var import_react10 = __toESM(require_react());
+
+// app/javascript/components/Layout/Sidebar.jsx
 var import_react = __toESM(require_react());
+function Sidebar({ activeView, onNavigate }) {
+  const navItems = [
+    { key: "employees", label: "Employees", icon: "\u{1F465}", badge: null },
+    { key: "countries", label: "Countries", icon: "\u{1F30D}", badge: null },
+    { key: "departments", label: "Departments", icon: "\u{1F3E2}", badge: null }
+  ];
+  const analyticsItems = [
+    { key: "insights", label: "Salary Insights", icon: "\u{1F4CA}", badge: null }
+  ];
+  return /* @__PURE__ */ import_react.default.createElement("aside", { className: "sidebar" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "sidebar-brand" }, /* @__PURE__ */ import_react.default.createElement("h1", null, "EmpManager"), /* @__PURE__ */ import_react.default.createElement("span", null, "Admin Panel")), /* @__PURE__ */ import_react.default.createElement("nav", { className: "sidebar-nav" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "sidebar-section-label" }, "Data Management"), navItems.map((item) => /* @__PURE__ */ import_react.default.createElement(
+    "div",
+    {
+      key: item.key,
+      className: `sidebar-nav-item ${activeView === item.key ? "active" : ""}`,
+      onClick: () => onNavigate(item.key)
+    },
+    /* @__PURE__ */ import_react.default.createElement("span", { className: "nav-icon" }, item.icon),
+    item.label,
+    item.badge && /* @__PURE__ */ import_react.default.createElement("span", { className: "nav-badge" }, item.badge)
+  )), /* @__PURE__ */ import_react.default.createElement("div", { className: "sidebar-section-label" }, "Analytics"), analyticsItems.map((item) => /* @__PURE__ */ import_react.default.createElement(
+    "div",
+    {
+      key: item.key,
+      className: `sidebar-nav-item ${activeView === item.key ? "active" : ""}`,
+      onClick: () => onNavigate(item.key)
+    },
+    /* @__PURE__ */ import_react.default.createElement("span", { className: "nav-icon" }, item.icon),
+    item.label
+  ))));
+}
+
+// app/javascript/components/Layout/Header.jsx
+var import_react2 = __toESM(require_react());
+function Header({ globalSearch, onGlobalSearchChange }) {
+  return /* @__PURE__ */ import_react2.default.createElement("header", { className: "header" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "header-search" }, /* @__PURE__ */ import_react2.default.createElement("span", { className: "search-icon" }, "\u{1F50D}"), /* @__PURE__ */ import_react2.default.createElement(
+    "input",
+    {
+      type: "text",
+      placeholder: "Search across all tables...",
+      value: globalSearch,
+      onChange: (e) => onGlobalSearchChange(e.target.value)
+    }
+  )), /* @__PURE__ */ import_react2.default.createElement("div", { className: "header-actions" }, /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn-icon", title: "Notifications" }, "\u{1F514}"), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn-icon", title: "Settings" }, "\u2699\uFE0F")));
+}
+
+// app/javascript/components/Employees/EmployeeList.jsx
+var import_react6 = __toESM(require_react());
+
+// app/javascript/data/dummyData.js
+var DUMMY_COUNTRIES = [
+  { id: 1, name: "United States", code: "US" },
+  { id: 2, name: "India", code: "IN" },
+  { id: 3, name: "United Kingdom", code: "GB" },
+  { id: 4, name: "Germany", code: "DE" },
+  { id: 5, name: "Canada", code: "CA" },
+  { id: 6, name: "Australia", code: "AU" },
+  { id: 7, name: "France", code: "FR" },
+  { id: 8, name: "Japan", code: "JP" }
+];
+var DUMMY_DEPARTMENTS = [
+  { id: 1, name: "Engineering" },
+  { id: 2, name: "Marketing" },
+  { id: 3, name: "Sales" },
+  { id: 4, name: "Human Resources" },
+  { id: 5, name: "Finance" },
+  { id: 6, name: "Operations" },
+  { id: 7, name: "Design" },
+  { id: 8, name: "Product" }
+];
+var JOB_TITLES = [
+  "Software Engineer",
+  "Senior Software Engineer",
+  "Staff Engineer",
+  "Product Manager",
+  "Senior Product Manager",
+  "Marketing Manager",
+  "Sales Representative",
+  "Account Executive",
+  "HR Specialist",
+  "Financial Analyst",
+  "Senior Financial Analyst",
+  "Operations Manager",
+  "UX Designer",
+  "Senior UX Designer",
+  "Data Scientist",
+  "DevOps Engineer",
+  "QA Engineer",
+  "Technical Lead",
+  "Business Analyst",
+  "Project Manager"
+];
+var FIRST_NAMES = [
+  "James",
+  "Mary",
+  "Robert",
+  "Patricia",
+  "John",
+  "Jennifer",
+  "Michael",
+  "Linda",
+  "David",
+  "Elizabeth",
+  "William",
+  "Barbara",
+  "Richard",
+  "Susan",
+  "Joseph",
+  "Jessica",
+  "Thomas",
+  "Sarah",
+  "Christopher",
+  "Karen",
+  "Priya",
+  "Rahul",
+  "Aisha",
+  "Chen",
+  "Yuki",
+  "Hans",
+  "Marie",
+  "Carlos",
+  "Fatima",
+  "Ahmed"
+];
+var LAST_NAMES = [
+  "Smith",
+  "Johnson",
+  "Williams",
+  "Brown",
+  "Jones",
+  "Garcia",
+  "Miller",
+  "Davis",
+  "Rodriguez",
+  "Martinez",
+  "Anderson",
+  "Taylor",
+  "Thomas",
+  "Hernandez",
+  "Moore",
+  "Martin",
+  "Jackson",
+  "Thompson",
+  "White",
+  "Lopez",
+  "Patel",
+  "Kumar",
+  "Singh",
+  "Weber",
+  "M\xFCller",
+  "Tanaka",
+  "Wang",
+  "Kim",
+  "Nakamura",
+  "Ali"
+];
+function generateDummyEmployees(count) {
+  const employees = [];
+  for (let i = 1; i <= count; i++) {
+    const firstName = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+    const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+    const country = DUMMY_COUNTRIES[Math.floor(Math.random() * DUMMY_COUNTRIES.length)];
+    const department = DUMMY_DEPARTMENTS[Math.floor(Math.random() * DUMMY_DEPARTMENTS.length)];
+    const jobTitle = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
+    const salary = Math.round((3e4 + Math.random() * 22e4) * 100) / 100;
+    const year = 2015 + Math.floor(Math.random() * 11);
+    const month = String(1 + Math.floor(Math.random() * 12)).padStart(2, "0");
+    const day = String(1 + Math.floor(Math.random() * 28)).padStart(2, "0");
+    employees.push({
+      id: i,
+      first_name: firstName,
+      last_name: lastName,
+      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@company.com`,
+      job_title: jobTitle,
+      salary,
+      country_id: country.id,
+      country_name: country.name,
+      country_code: country.code,
+      department_id: department.id,
+      department_name: department.name,
+      hire_date: `${year}-${month}-${day}`
+    });
+  }
+  return employees;
+}
+var DUMMY_EMPLOYEES = generateDummyEmployees(150);
+
+// app/javascript/services/api.js
+var API_BASE = "/api/v1";
+var USE_DUMMY = true;
+async function request(path, options = {}) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  const response = await fetch(`${API_BASE}${path}`, {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+      ...options.headers
+    },
+    ...options
+  });
+  if (!response.ok) {
+    const error2 = await response.json().catch(() => ({}));
+    throw new Error(error2.message || `Request failed: ${response.status}`);
+  }
+  return response.json();
+}
+async function fetchEmployees({ page = 1, perPage = 25, search = "", countryId = "", departmentId = "", sortBy = "id", sortDir = "asc" } = {}) {
+  if (USE_DUMMY) {
+    let data = [...DUMMY_EMPLOYEES];
+    if (search) {
+      const q = search.toLowerCase();
+      data = data.filter(
+        (e) => `${e.first_name} ${e.last_name}`.toLowerCase().includes(q) || e.email.toLowerCase().includes(q) || e.job_title.toLowerCase().includes(q)
+      );
+    }
+    if (countryId) data = data.filter((e) => e.country_id === Number(countryId));
+    if (departmentId) data = data.filter((e) => e.department_id === Number(departmentId));
+    data.sort((a, b) => {
+      let valA = a[sortBy];
+      let valB = b[sortBy];
+      if (typeof valA === "string") {
+        valA = valA.toLowerCase();
+        valB = valB.toLowerCase();
+      }
+      if (valA < valB) return sortDir === "asc" ? -1 : 1;
+      if (valA > valB) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+    const total = data.length;
+    const start2 = (page - 1) * perPage;
+    const employees = data.slice(start2, start2 + perPage);
+    return { employees, total, page, per_page: perPage, total_pages: Math.ceil(total / perPage) };
+  }
+  const params = new URLSearchParams({ page, per_page: perPage, search, country_id: countryId, department_id: departmentId, sort_by: sortBy, sort_dir: sortDir });
+  return request(`/employees?${params}`);
+}
+async function createEmployee(data) {
+  if (USE_DUMMY) {
+    const newId = Math.max(...DUMMY_EMPLOYEES.map((e) => e.id)) + 1;
+    const country = DUMMY_COUNTRIES.find((c) => c.id === Number(data.country_id));
+    const department = DUMMY_DEPARTMENTS.find((d) => d.id === Number(data.department_id));
+    const newEmp = {
+      id: newId,
+      ...data,
+      country_name: country?.name || "",
+      country_code: country?.code || "",
+      department_name: department?.name || ""
+    };
+    DUMMY_EMPLOYEES.unshift(newEmp);
+    return newEmp;
+  }
+  return request("/employees", { method: "POST", body: JSON.stringify({ employee: data }) });
+}
+async function updateEmployee(id, data) {
+  if (USE_DUMMY) {
+    const idx = DUMMY_EMPLOYEES.findIndex((e) => e.id === Number(id));
+    if (idx === -1) throw new Error("Employee not found");
+    const country = DUMMY_COUNTRIES.find((c) => c.id === Number(data.country_id));
+    const department = DUMMY_DEPARTMENTS.find((d) => d.id === Number(data.department_id));
+    DUMMY_EMPLOYEES[idx] = {
+      ...DUMMY_EMPLOYEES[idx],
+      ...data,
+      country_name: country?.name || DUMMY_EMPLOYEES[idx].country_name,
+      country_code: country?.code || DUMMY_EMPLOYEES[idx].country_code,
+      department_name: department?.name || DUMMY_EMPLOYEES[idx].department_name
+    };
+    return DUMMY_EMPLOYEES[idx];
+  }
+  return request(`/employees/${id}`, { method: "PATCH", body: JSON.stringify({ employee: data }) });
+}
+async function deleteEmployee(id) {
+  if (USE_DUMMY) {
+    const idx = DUMMY_EMPLOYEES.findIndex((e) => e.id === Number(id));
+    if (idx !== -1) DUMMY_EMPLOYEES.splice(idx, 1);
+    return { success: true };
+  }
+  return request(`/employees/${id}`, { method: "DELETE" });
+}
+async function fetchCountries() {
+  if (USE_DUMMY) return DUMMY_COUNTRIES;
+  return request("/countries");
+}
+async function fetchDepartments() {
+  if (USE_DUMMY) return DUMMY_DEPARTMENTS;
+  return request("/departments");
+}
+async function fetchSalaryInsights({ countryId = "" } = {}) {
+  if (USE_DUMMY) {
+    let data = [...DUMMY_EMPLOYEES];
+    if (countryId) data = data.filter((e) => e.country_id === Number(countryId));
+    const salaries = data.map((e) => e.salary);
+    const sorted = [...salaries].sort((a, b) => a - b);
+    const byCountry = {};
+    data.forEach((e) => {
+      if (!byCountry[e.country_name]) byCountry[e.country_name] = [];
+      byCountry[e.country_name].push(e.salary);
+    });
+    const countryInsights = Object.entries(byCountry).map(([country, sals]) => ({
+      country,
+      min_salary: Math.min(...sals),
+      max_salary: Math.max(...sals),
+      avg_salary: Math.round(sals.reduce((a, b) => a + b, 0) / sals.length),
+      employee_count: sals.length
+    }));
+    const byJobTitle = {};
+    data.forEach((e) => {
+      const key = `${e.job_title}|${e.country_name}`;
+      if (!byJobTitle[key]) byJobTitle[key] = { job_title: e.job_title, country: e.country_name, salaries: [] };
+      byJobTitle[key].salaries.push(e.salary);
+    });
+    const jobTitleInsights = Object.values(byJobTitle).map((item) => ({
+      job_title: item.job_title,
+      country: item.country,
+      avg_salary: Math.round(item.salaries.reduce((a, b) => a + b, 0) / item.salaries.length),
+      employee_count: item.salaries.length
+    }));
+    return {
+      by_country: countryInsights.sort((a, b) => b.employee_count - a.employee_count),
+      by_job_title: jobTitleInsights.sort((a, b) => b.avg_salary - a.avg_salary),
+      overall: {
+        total_employees: data.length,
+        avg_salary: salaries.length ? Math.round(salaries.reduce((a, b) => a + b, 0) / salaries.length) : 0,
+        min_salary: salaries.length ? Math.min(...salaries) : 0,
+        max_salary: salaries.length ? Math.max(...salaries) : 0,
+        total_departments: new Set(data.map((e) => e.department_name)).size,
+        total_countries: new Set(data.map((e) => e.country_name)).size
+      }
+    };
+  }
+  const params = new URLSearchParams();
+  if (countryId) params.set("country_id", countryId);
+  return request(`/salary_insights?${params}`);
+}
+
+// app/javascript/components/common/Pagination.jsx
+var import_react3 = __toESM(require_react());
+function Pagination({ page, totalPages, total, perPage, onPageChange }) {
+  const start2 = (page - 1) * perPage + 1;
+  const end = Math.min(page * perPage, total);
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+    let startPage = Math.max(1, page - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+    if (endPage - startPage + 1 < maxVisible) {
+      startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+  if (total === 0) return null;
+  return /* @__PURE__ */ import_react3.default.createElement("div", { className: "pagination" }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "pagination-info" }, "Showing ", start2, "\u2013", end, " of ", total, " results"), /* @__PURE__ */ import_react3.default.createElement("div", { className: "pagination-controls" }, /* @__PURE__ */ import_react3.default.createElement(
+    "button",
+    {
+      className: "pagination-btn",
+      disabled: page <= 1,
+      onClick: () => onPageChange(1)
+    },
+    "\xAB"
+  ), /* @__PURE__ */ import_react3.default.createElement(
+    "button",
+    {
+      className: "pagination-btn",
+      disabled: page <= 1,
+      onClick: () => onPageChange(page - 1)
+    },
+    "\u2039"
+  ), getPageNumbers().map((p) => /* @__PURE__ */ import_react3.default.createElement(
+    "button",
+    {
+      key: p,
+      className: `pagination-btn ${p === page ? "active" : ""}`,
+      onClick: () => onPageChange(p)
+    },
+    p
+  )), /* @__PURE__ */ import_react3.default.createElement(
+    "button",
+    {
+      className: "pagination-btn",
+      disabled: page >= totalPages,
+      onClick: () => onPageChange(page + 1)
+    },
+    "\u203A"
+  ), /* @__PURE__ */ import_react3.default.createElement(
+    "button",
+    {
+      className: "pagination-btn",
+      disabled: page >= totalPages,
+      onClick: () => onPageChange(totalPages)
+    },
+    "\xBB"
+  )));
+}
+
+// app/javascript/components/Employees/EmployeeForm.jsx
+var import_react5 = __toESM(require_react());
+
+// app/javascript/components/common/Modal.jsx
+var import_react4 = __toESM(require_react());
+function Modal({ title, children, onClose, footer }) {
+  return /* @__PURE__ */ import_react4.default.createElement("div", { className: "modal-overlay", onClick: onClose }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "modal", onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "modal-header" }, /* @__PURE__ */ import_react4.default.createElement("h3", null, title), /* @__PURE__ */ import_react4.default.createElement("button", { className: "modal-close", onClick: onClose }, "\xD7")), /* @__PURE__ */ import_react4.default.createElement("div", { className: "modal-body" }, children), footer && /* @__PURE__ */ import_react4.default.createElement("div", { className: "modal-footer" }, footer)));
+}
+
+// app/javascript/components/Employees/EmployeeForm.jsx
+function EmployeeForm({ employee, countries, departments, onSave, onClose }) {
+  const isEdit = !!employee;
+  const [form, setForm] = (0, import_react5.useState)({
+    first_name: "",
+    last_name: "",
+    email: "",
+    job_title: "",
+    salary: "",
+    country_id: "",
+    department_id: "",
+    hire_date: ""
+  });
+  (0, import_react5.useEffect)(() => {
+    if (employee) {
+      setForm({
+        first_name: employee.first_name || "",
+        last_name: employee.last_name || "",
+        email: employee.email || "",
+        job_title: employee.job_title || "",
+        salary: employee.salary || "",
+        country_id: employee.country_id || "",
+        department_id: employee.department_id || "",
+        hire_date: employee.hire_date || ""
+      });
+    }
+  }, [employee]);
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const data = { ...form, salary: parseFloat(form.salary), country_id: parseInt(form.country_id), department_id: parseInt(form.department_id) };
+    if (isEdit) {
+      await updateEmployee(employee.id, data);
+    } else {
+      await createEmployee(data);
+    }
+    onSave();
+  }
+  return /* @__PURE__ */ import_react5.default.createElement(
+    Modal,
+    {
+      title: isEdit ? "Edit Employee" : "Add Employee",
+      onClose,
+      footer: /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-secondary", onClick: onClose }, "Cancel"), /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-primary", onClick: handleSubmit }, isEdit ? "Update" : "Create"))
+    },
+    /* @__PURE__ */ import_react5.default.createElement("form", { onSubmit: handleSubmit }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-row" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "First Name"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "first_name", value: form.first_name, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Last Name"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "last_name", value: form.last_name, onChange: handleChange, required: true }))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Email"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "email", type: "email", value: form.email, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-row" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Job Title"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "job_title", value: form.job_title, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Salary ($)"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "salary", type: "number", step: "0.01", min: "0", value: form.salary, onChange: handleChange, required: true }))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-row" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Country"), /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-select", name: "country_id", value: form.country_id, onChange: handleChange, required: true }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "" }, "Select Country"), countries.map((c) => /* @__PURE__ */ import_react5.default.createElement("option", { key: c.id, value: c.id }, c.name)))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Department"), /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-select", name: "department_id", value: form.department_id, onChange: handleChange, required: true }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "" }, "Select Department"), departments.map((d) => /* @__PURE__ */ import_react5.default.createElement("option", { key: d.id, value: d.id }, d.name))))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Hire Date"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "hire_date", type: "date", value: form.hire_date, onChange: handleChange, required: true })))
+  );
+}
+
+// app/javascript/components/Employees/EmployeeList.jsx
+var DEPARTMENT_BADGE_MAP = {
+  "Engineering": "badge-engineering",
+  "Marketing": "badge-marketing",
+  "Sales": "badge-sales",
+  "Human Resources": "badge-hr",
+  "Finance": "badge-finance",
+  "Operations": "badge-operations",
+  "Design": "badge-design",
+  "Product": "badge-product"
+};
+var QUICK_FILTERS = [
+  { label: "All", value: "" },
+  { label: "High Salary (>150k)", value: "high_salary" },
+  { label: "Recent Hires", value: "recent" },
+  { label: "Engineering", value: "dept_engineering" },
+  { label: "Sales", value: "dept_sales" },
+  { label: "Marketing", value: "dept_marketing" }
+];
+function EmployeeList({ globalSearch }) {
+  const [employees, setEmployees] = (0, import_react6.useState)([]);
+  const [countries, setCountries] = (0, import_react6.useState)([]);
+  const [departments, setDepartments] = (0, import_react6.useState)([]);
+  const [total, setTotal] = (0, import_react6.useState)(0);
+  const [page, setPage] = (0, import_react6.useState)(1);
+  const [perPage] = (0, import_react6.useState)(25);
+  const [totalPages, setTotalPages] = (0, import_react6.useState)(1);
+  const [search, setSearch] = (0, import_react6.useState)("");
+  const [countryFilter, setCountryFilter] = (0, import_react6.useState)("");
+  const [departmentFilter, setDepartmentFilter] = (0, import_react6.useState)("");
+  const [sortBy, setSortBy] = (0, import_react6.useState)("id");
+  const [sortDir, setSortDir] = (0, import_react6.useState)("asc");
+  const [quickFilter, setQuickFilter] = (0, import_react6.useState)("");
+  const [showForm, setShowForm] = (0, import_react6.useState)(false);
+  const [editingEmployee, setEditingEmployee] = (0, import_react6.useState)(null);
+  const [deleteTarget, setDeleteTarget] = (0, import_react6.useState)(null);
+  const activeSearch = globalSearch || search;
+  (0, import_react6.useEffect)(() => {
+    fetchCountries().then(setCountries);
+    fetchDepartments().then(setDepartments);
+  }, []);
+  (0, import_react6.useEffect)(() => {
+    loadEmployees();
+  }, [page, activeSearch, countryFilter, departmentFilter, sortBy, sortDir]);
+  (0, import_react6.useEffect)(() => {
+    setPage(1);
+  }, [activeSearch, countryFilter, departmentFilter]);
+  async function loadEmployees() {
+    const result = await fetchEmployees({
+      page,
+      perPage,
+      search: activeSearch,
+      countryId: countryFilter,
+      departmentId: departmentFilter,
+      sortBy,
+      sortDir
+    });
+    setEmployees(result.employees);
+    setTotal(result.total);
+    setTotalPages(result.total_pages);
+  }
+  const filteredEmployees = (0, import_react6.useMemo)(() => {
+    let data = [...employees];
+    if (quickFilter === "high_salary") {
+      data = data.filter((e) => e.salary > 15e4);
+    } else if (quickFilter === "recent") {
+      const cutoff = /* @__PURE__ */ new Date();
+      cutoff.setFullYear(cutoff.getFullYear() - 2);
+      data = data.filter((e) => new Date(e.hire_date) >= cutoff);
+    } else if (quickFilter.startsWith("dept_")) {
+      const dept = quickFilter.replace("dept_", "");
+      data = data.filter((e) => e.department_name.toLowerCase() === dept);
+    }
+    return data;
+  }, [employees, quickFilter]);
+  function handleSort(column) {
+    if (sortBy === column) {
+      setSortDir((d) => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortDir("asc");
+    }
+  }
+  function renderSortIndicator(column) {
+    if (sortBy !== column) return /* @__PURE__ */ import_react6.default.createElement("span", { className: "sort-indicator" }, "\u2195");
+    return /* @__PURE__ */ import_react6.default.createElement("span", { className: "sort-indicator" }, sortDir === "asc" ? "\u2191" : "\u2193");
+  }
+  function handleAdd() {
+    setEditingEmployee(null);
+    setShowForm(true);
+  }
+  function handleEdit(emp) {
+    setEditingEmployee(emp);
+    setShowForm(true);
+  }
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    await deleteEmployee(deleteTarget.id);
+    setDeleteTarget(null);
+    loadEmployees();
+  }
+  function handleFormSave() {
+    setShowForm(false);
+    setEditingEmployee(null);
+    loadEmployees();
+  }
+  function formatSalary(val) {
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 }).format(val);
+  }
+  return /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("h2", null, "Employees"), /* @__PURE__ */ import_react6.default.createElement("div", { className: "page-header-subtitle" }, total, " total employees")), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-primary", onClick: handleAdd }, "+ Add Employee")), /* @__PURE__ */ import_react6.default.createElement("div", { className: "quick-filters" }, QUICK_FILTERS.map((f) => /* @__PURE__ */ import_react6.default.createElement(
+    "button",
+    {
+      key: f.value,
+      className: `quick-filter-btn ${quickFilter === f.value ? "active" : ""}`,
+      onClick: () => setQuickFilter(f.value === quickFilter ? "" : f.value)
+    },
+    f.label
+  ))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "table-toolbar" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "table-search" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "search-icon" }, "\u{1F50D}"), /* @__PURE__ */ import_react6.default.createElement(
+    "input",
+    {
+      type: "text",
+      placeholder: "Search by name, email, title...",
+      value: search,
+      onChange: (e) => setSearch(e.target.value)
+    }
+  )), /* @__PURE__ */ import_react6.default.createElement(
+    "select",
+    {
+      className: "table-filter-select",
+      value: countryFilter,
+      onChange: (e) => setCountryFilter(e.target.value)
+    },
+    /* @__PURE__ */ import_react6.default.createElement("option", { value: "" }, "All Countries"),
+    countries.map((c) => /* @__PURE__ */ import_react6.default.createElement("option", { key: c.id, value: c.id }, c.name))
+  ), /* @__PURE__ */ import_react6.default.createElement(
+    "select",
+    {
+      className: "table-filter-select",
+      value: departmentFilter,
+      onChange: (e) => setDepartmentFilter(e.target.value)
+    },
+    /* @__PURE__ */ import_react6.default.createElement("option", { value: "" }, "All Departments"),
+    departments.map((d) => /* @__PURE__ */ import_react6.default.createElement("option", { key: d.id, value: d.id }, d.name))
+  )), /* @__PURE__ */ import_react6.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "id" ? "sorted" : "", onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "first_name" ? "sorted" : "", onClick: () => handleSort("first_name") }, "Name ", renderSortIndicator("first_name")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "email" ? "sorted" : "", onClick: () => handleSort("email") }, "Email ", renderSortIndicator("email")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "job_title" ? "sorted" : "", onClick: () => handleSort("job_title") }, "Job Title ", renderSortIndicator("job_title")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "department_name" ? "sorted" : "", onClick: () => handleSort("department_name") }, "Department ", renderSortIndicator("department_name")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "country_name" ? "sorted" : "", onClick: () => handleSort("country_name") }, "Country ", renderSortIndicator("country_name")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "salary" ? "sorted" : "", onClick: () => handleSort("salary") }, "Salary ", renderSortIndicator("salary")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "hire_date" ? "sorted" : "", onClick: () => handleSort("hire_date") }, "Hire Date ", renderSortIndicator("hire_date")), /* @__PURE__ */ import_react6.default.createElement("th", null, "Actions"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, filteredEmployees.length === 0 ? /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("td", { colSpan: "9" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "empty-state-icon" }, "\u{1F4ED}"), "No employees found"))) : filteredEmployees.map((emp) => /* @__PURE__ */ import_react6.default.createElement("tr", { key: emp.id }, /* @__PURE__ */ import_react6.default.createElement("td", null, emp.id), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-name" }, emp.first_name, " ", emp.last_name), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-email" }, emp.email), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.job_title), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement("span", { className: `cell-badge ${DEPARTMENT_BADGE_MAP[emp.department_name] || ""}` }, emp.department_name)), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.country_name), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-salary" }, formatSalary(emp.salary)), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.hire_date), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement("div", { className: "actions-cell" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleEdit(emp) }, "Edit"), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-danger btn-sm", onClick: () => setDeleteTarget(emp) }, "Delete"))))))), /* @__PURE__ */ import_react6.default.createElement(
+    Pagination,
+    {
+      page,
+      totalPages,
+      total,
+      perPage,
+      onPageChange: setPage
+    }
+  )), showForm && /* @__PURE__ */ import_react6.default.createElement(
+    EmployeeForm,
+    {
+      employee: editingEmployee,
+      countries,
+      departments,
+      onSave: handleFormSave,
+      onClose: () => {
+        setShowForm(false);
+        setEditingEmployee(null);
+      }
+    }
+  ), deleteTarget && /* @__PURE__ */ import_react6.default.createElement(
+    Modal,
+    {
+      title: "Delete Employee",
+      onClose: () => setDeleteTarget(null),
+      footer: /* @__PURE__ */ import_react6.default.createElement(import_react6.default.Fragment, null, /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-secondary", onClick: () => setDeleteTarget(null) }, "Cancel"), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-danger", onClick: handleDelete }, "Delete"))
+    },
+    /* @__PURE__ */ import_react6.default.createElement("p", { className: "confirm-text" }, "Are you sure you want to delete ", /* @__PURE__ */ import_react6.default.createElement("strong", null, deleteTarget.first_name, " ", deleteTarget.last_name), "? This action cannot be undone.")
+  ));
+}
+
+// app/javascript/components/Countries/CountriesList.jsx
+var import_react7 = __toESM(require_react());
+function CountriesList({ globalSearch }) {
+  const [countries, setCountries] = (0, import_react7.useState)([]);
+  const [sortBy, setSortBy] = (0, import_react7.useState)("name");
+  const [sortDir, setSortDir] = (0, import_react7.useState)("asc");
+  (0, import_react7.useEffect)(() => {
+    fetchCountries().then(setCountries);
+  }, []);
+  const filtered = countries.filter((c) => {
+    if (!globalSearch) return true;
+    const q = globalSearch.toLowerCase();
+    return c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
+  }).sort((a, b) => {
+    const valA = a[sortBy]?.toLowerCase?.() || a[sortBy];
+    const valB = b[sortBy]?.toLowerCase?.() || b[sortBy];
+    if (valA < valB) return sortDir === "asc" ? -1 : 1;
+    if (valA > valB) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+  function handleSort(col) {
+    if (sortBy === col) setSortDir((d) => d === "asc" ? "desc" : "asc");
+    else {
+      setSortBy(col);
+      setSortDir("asc");
+    }
+  }
+  function renderSortIndicator(col) {
+    if (sortBy !== col) return /* @__PURE__ */ import_react7.default.createElement("span", { className: "sort-indicator" }, "\u2195");
+    return /* @__PURE__ */ import_react7.default.createElement("span", { className: "sort-indicator" }, sortDir === "asc" ? "\u2191" : "\u2193");
+  }
+  return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "Countries"), /* @__PURE__ */ import_react7.default.createElement("div", { className: "page-header-subtitle" }, filtered.length, " countries"))), /* @__PURE__ */ import_react7.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react7.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react7.default.createElement("thead", null, /* @__PURE__ */ import_react7.default.createElement("tr", null, /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("name") }, "Name ", renderSortIndicator("name")), /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("code") }, "Code ", renderSortIndicator("code")))), /* @__PURE__ */ import_react7.default.createElement("tbody", null, filtered.length === 0 ? /* @__PURE__ */ import_react7.default.createElement("tr", null, /* @__PURE__ */ import_react7.default.createElement("td", { colSpan: "3" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "empty-state-icon" }, "\u{1F30D}"), "No countries found"))) : filtered.map((c) => /* @__PURE__ */ import_react7.default.createElement("tr", { key: c.id }, /* @__PURE__ */ import_react7.default.createElement("td", null, c.id), /* @__PURE__ */ import_react7.default.createElement("td", { className: "cell-name" }, c.name), /* @__PURE__ */ import_react7.default.createElement("td", null, /* @__PURE__ */ import_react7.default.createElement("span", { className: "cell-badge badge-engineering" }, c.code))))))));
+}
+
+// app/javascript/components/Departments/DepartmentsList.jsx
+var import_react8 = __toESM(require_react());
+function DepartmentsList({ globalSearch }) {
+  const [departments, setDepartments] = (0, import_react8.useState)([]);
+  const [sortBy, setSortBy] = (0, import_react8.useState)("name");
+  const [sortDir, setSortDir] = (0, import_react8.useState)("asc");
+  const BADGE_MAP = {
+    "Engineering": "badge-engineering",
+    "Marketing": "badge-marketing",
+    "Sales": "badge-sales",
+    "Human Resources": "badge-hr",
+    "Finance": "badge-finance",
+    "Operations": "badge-operations",
+    "Design": "badge-design",
+    "Product": "badge-product"
+  };
+  (0, import_react8.useEffect)(() => {
+    fetchDepartments().then(setDepartments);
+  }, []);
+  const filtered = departments.filter((d) => {
+    if (!globalSearch) return true;
+    return d.name.toLowerCase().includes(globalSearch.toLowerCase());
+  }).sort((a, b) => {
+    const valA = a[sortBy]?.toLowerCase?.() || a[sortBy];
+    const valB = b[sortBy]?.toLowerCase?.() || b[sortBy];
+    if (valA < valB) return sortDir === "asc" ? -1 : 1;
+    if (valA > valB) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+  function handleSort(col) {
+    if (sortBy === col) setSortDir((d) => d === "asc" ? "desc" : "asc");
+    else {
+      setSortBy(col);
+      setSortDir("asc");
+    }
+  }
+  function renderSortIndicator(col) {
+    if (sortBy !== col) return /* @__PURE__ */ import_react8.default.createElement("span", { className: "sort-indicator" }, "\u2195");
+    return /* @__PURE__ */ import_react8.default.createElement("span", { className: "sort-indicator" }, sortDir === "asc" ? "\u2191" : "\u2193");
+  }
+  return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("h2", null, "Departments"), /* @__PURE__ */ import_react8.default.createElement("div", { className: "page-header-subtitle" }, filtered.length, " departments"))), /* @__PURE__ */ import_react8.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react8.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react8.default.createElement("thead", null, /* @__PURE__ */ import_react8.default.createElement("tr", null, /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("name") }, "Name ", renderSortIndicator("name")))), /* @__PURE__ */ import_react8.default.createElement("tbody", null, filtered.length === 0 ? /* @__PURE__ */ import_react8.default.createElement("tr", null, /* @__PURE__ */ import_react8.default.createElement("td", { colSpan: "2" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "empty-state-icon" }, "\u{1F3E2}"), "No departments found"))) : filtered.map((d) => /* @__PURE__ */ import_react8.default.createElement("tr", { key: d.id }, /* @__PURE__ */ import_react8.default.createElement("td", null, d.id), /* @__PURE__ */ import_react8.default.createElement("td", null, /* @__PURE__ */ import_react8.default.createElement("span", { className: `cell-badge ${BADGE_MAP[d.name] || ""}` }, d.name))))))));
+}
+
+// app/javascript/components/Insights/InsightsDashboard.jsx
+var import_react9 = __toESM(require_react());
+function InsightsDashboard() {
+  const [insights, setInsights] = (0, import_react9.useState)(null);
+  const [countries, setCountries] = (0, import_react9.useState)([]);
+  const [countryFilter, setCountryFilter] = (0, import_react9.useState)("");
+  const [sortBy, setSortBy] = (0, import_react9.useState)("employee_count");
+  const [sortDir, setSortDir] = (0, import_react9.useState)("desc");
+  (0, import_react9.useEffect)(() => {
+    fetchCountries().then(setCountries);
+  }, []);
+  (0, import_react9.useEffect)(() => {
+    fetchSalaryInsights({ countryId: countryFilter }).then(setInsights);
+  }, [countryFilter]);
+  function formatSalary(val) {
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 }).format(val);
+  }
+  function handleSort(col) {
+    if (sortBy === col) setSortDir((d) => d === "asc" ? "desc" : "asc");
+    else {
+      setSortBy(col);
+      setSortDir("desc");
+    }
+  }
+  function renderSortIndicator(col) {
+    if (sortBy !== col) return /* @__PURE__ */ import_react9.default.createElement("span", { className: "sort-indicator" }, "\u2195");
+    return /* @__PURE__ */ import_react9.default.createElement("span", { className: "sort-indicator" }, sortDir === "asc" ? "\u2191" : "\u2193");
+  }
+  if (!insights) return /* @__PURE__ */ import_react9.default.createElement("div", { className: "page-content" }, /* @__PURE__ */ import_react9.default.createElement("p", null, "Loading..."));
+  const sortedCountryInsights = [...insights.by_country].sort((a, b) => {
+    const valA = a[sortBy];
+    const valB = b[sortBy];
+    if (valA < valB) return sortDir === "asc" ? -1 : 1;
+    if (valA > valB) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+  const sortedJobInsights = [...insights.by_job_title].sort((a, b) => {
+    const valA = typeof a[sortBy] === "string" ? a[sortBy].toLowerCase() : a[sortBy];
+    const valB = typeof b[sortBy] === "string" ? b[sortBy].toLowerCase() : b[sortBy];
+    if (valA < valB) return sortDir === "asc" ? -1 : 1;
+    if (valA > valB) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+  return /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("h2", null, "Salary Insights"), /* @__PURE__ */ import_react9.default.createElement("div", { className: "page-header-subtitle" }, "Compensation analytics across the organization")), /* @__PURE__ */ import_react9.default.createElement(
+    "select",
+    {
+      className: "table-filter-select",
+      value: countryFilter,
+      onChange: (e) => setCountryFilter(e.target.value)
+    },
+    /* @__PURE__ */ import_react9.default.createElement("option", { value: "" }, "All Countries"),
+    countries.map((c) => /* @__PURE__ */ import_react9.default.createElement("option", { key: c.id, value: c.id }, c.name))
+  )), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stats-grid" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-label" }, "Total Employees"), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-value" }, insights.overall.total_employees.toLocaleString())), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-label" }, "Average Salary"), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-value" }, formatSalary(insights.overall.avg_salary))), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-label" }, "Min Salary"), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-value" }, formatSalary(insights.overall.min_salary))), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-label" }, "Max Salary"), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-value" }, formatSalary(insights.overall.max_salary))), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-label" }, "Countries"), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-value" }, insights.overall.total_countries)), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-label" }, "Departments"), /* @__PURE__ */ import_react9.default.createElement("div", { className: "stat-card-value" }, insights.overall.total_departments))), /* @__PURE__ */ import_react9.default.createElement("div", { className: "page-header", style: { marginTop: "var(--space-xl)" } }, /* @__PURE__ */ import_react9.default.createElement("h2", { style: { fontSize: "var(--font-size-lg)" } }, "By Country")), /* @__PURE__ */ import_react9.default.createElement("div", { className: "data-table-wrapper", style: { marginBottom: "var(--space-2xl)" } }, /* @__PURE__ */ import_react9.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react9.default.createElement("thead", null, /* @__PURE__ */ import_react9.default.createElement("tr", null, /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("country") }, "Country ", renderSortIndicator("country")), /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("employee_count") }, "Employees ", renderSortIndicator("employee_count")), /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("min_salary") }, "Min Salary ", renderSortIndicator("min_salary")), /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("max_salary") }, "Max Salary ", renderSortIndicator("max_salary")), /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("avg_salary") }, "Avg Salary ", renderSortIndicator("avg_salary")))), /* @__PURE__ */ import_react9.default.createElement("tbody", null, sortedCountryInsights.map((row) => /* @__PURE__ */ import_react9.default.createElement("tr", { key: row.country }, /* @__PURE__ */ import_react9.default.createElement("td", { className: "cell-name" }, row.country), /* @__PURE__ */ import_react9.default.createElement("td", null, row.employee_count), /* @__PURE__ */ import_react9.default.createElement("td", { className: "cell-salary" }, formatSalary(row.min_salary)), /* @__PURE__ */ import_react9.default.createElement("td", { className: "cell-salary" }, formatSalary(row.max_salary)), /* @__PURE__ */ import_react9.default.createElement("td", { className: "cell-salary" }, formatSalary(row.avg_salary))))))), /* @__PURE__ */ import_react9.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react9.default.createElement("h2", { style: { fontSize: "var(--font-size-lg)" } }, "By Job Title")), /* @__PURE__ */ import_react9.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react9.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react9.default.createElement("thead", null, /* @__PURE__ */ import_react9.default.createElement("tr", null, /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("job_title") }, "Job Title ", renderSortIndicator("job_title")), /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("country") }, "Country ", renderSortIndicator("country")), /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("employee_count") }, "Employees ", renderSortIndicator("employee_count")), /* @__PURE__ */ import_react9.default.createElement("th", { onClick: () => handleSort("avg_salary") }, "Avg Salary ", renderSortIndicator("avg_salary")))), /* @__PURE__ */ import_react9.default.createElement("tbody", null, sortedJobInsights.slice(0, 20).map((row, i) => /* @__PURE__ */ import_react9.default.createElement("tr", { key: i }, /* @__PURE__ */ import_react9.default.createElement("td", { className: "cell-name" }, row.job_title), /* @__PURE__ */ import_react9.default.createElement("td", null, row.country), /* @__PURE__ */ import_react9.default.createElement("td", null, row.employee_count), /* @__PURE__ */ import_react9.default.createElement("td", { className: "cell-salary" }, formatSalary(row.avg_salary))))))));
+}
+
+// app/javascript/components/App.jsx
 function App() {
-  return /* @__PURE__ */ import_react.default.createElement("div", { style: { fontFamily: "Arial, sans-serif", padding: "40px", textAlign: "center" } }, /* @__PURE__ */ import_react.default.createElement("h1", null, "\u{1F3E2} Employee Management"), /* @__PURE__ */ import_react.default.createElement("p", null, "React is running inside Rails! \u{1F389}"));
+  const [activeView, setActiveView] = (0, import_react10.useState)("employees");
+  const [globalSearch, setGlobalSearch] = (0, import_react10.useState)("");
+  function renderContent() {
+    switch (activeView) {
+      case "employees":
+        return /* @__PURE__ */ import_react10.default.createElement(EmployeeList, { globalSearch });
+      case "countries":
+        return /* @__PURE__ */ import_react10.default.createElement(CountriesList, { globalSearch });
+      case "departments":
+        return /* @__PURE__ */ import_react10.default.createElement(DepartmentsList, { globalSearch });
+      case "insights":
+        return /* @__PURE__ */ import_react10.default.createElement(InsightsDashboard, null);
+      default:
+        return /* @__PURE__ */ import_react10.default.createElement(EmployeeList, { globalSearch });
+    }
+  }
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "app-layout" }, /* @__PURE__ */ import_react10.default.createElement(Sidebar, { activeView, onNavigate: setActiveView }), /* @__PURE__ */ import_react10.default.createElement("div", { className: "main-content" }, /* @__PURE__ */ import_react10.default.createElement(
+    Header,
+    {
+      globalSearch,
+      onGlobalSearchChange: setGlobalSearch
+    }
+  ), /* @__PURE__ */ import_react10.default.createElement("div", { className: "page-content" }, renderContent())));
 }
 
 // app/javascript/application.js
@@ -30076,7 +30865,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("root");
   if (container) {
     const root = (0, import_client.createRoot)(container);
-    root.render(/* @__PURE__ */ import_react2.default.createElement(App, null));
+    root.render(/* @__PURE__ */ import_react11.default.createElement(App, null));
   }
 });
 /*! Bundled license information:
