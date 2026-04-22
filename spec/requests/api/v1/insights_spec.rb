@@ -26,10 +26,19 @@ RSpec.describe "Api::V1::Insights", type: :request do
       expect(overall["total_departments"]).to eq(2)
     end
 
+    it "counts departments by unique name, not by id" do
+      # Add Engineering in Germany too — same name, different id
+      eng_de = create(:department, name: "Engineering", code: "ENG2", country: germany)
+      create(:employee, email: "d@co.com", salary: 90000, job_title: "DevOps", department: eng_de, country: germany)
+      get api_v1_salary_insights_path
+      json = JSON.parse(response.body)
+      # 3 department records but only 2 unique names (Engineering, Sales)
+      expect(json["overall"]["total_departments"]).to eq(2)
+    end
+
     it "returns country breakdown" do
       get api_v1_salary_insights_path
       json = JSON.parse(response.body)
-
       countries = json["by_country"]
       india_row = countries.find { |c| c["country"] == "India" }
       expect(india_row["employee_count"]).to eq(2)

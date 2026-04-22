@@ -28,7 +28,7 @@ module Api
           min_salary: result[2].to_f,
           max_salary: result[3].to_f,
           total_countries: scope.distinct.count(:country_id),
-          total_departments: scope.distinct.count(:department_id)
+          total_departments: scope.joins(:department).distinct.count("departments.name")
         }
       end
 
