@@ -1,0 +1,7 @@
+Implementation Plan
+
+Architectural Design:
+
+1. created country model with validations and associations
+2. created department along with reference to country. Department can have multiple employees
+3. created employees model with validations and associations and in reference to country and department.
