@@ -30118,136 +30118,8 @@ function Header({ globalSearch, onGlobalSearchChange }) {
 // app/javascript/components/Employees/EmployeeList.jsx
 var import_react6 = __toESM(require_react());
 
-// app/javascript/data/dummyData.js
-var DUMMY_DEPARTMENTS2 = [
-  { id: 1, name: "Engineering" },
-  { id: 2, name: "Marketing" },
-  { id: 3, name: "Sales" },
-  { id: 4, name: "Human Resources" },
-  { id: 5, name: "Finance" },
-  { id: 6, name: "Operations" },
-  { id: 7, name: "Design" },
-  { id: 8, name: "Product" }
-];
-var JOB_TITLES = [
-  "Software Engineer",
-  "Senior Software Engineer",
-  "Staff Engineer",
-  "Product Manager",
-  "Senior Product Manager",
-  "Marketing Manager",
-  "Sales Representative",
-  "Account Executive",
-  "HR Specialist",
-  "Financial Analyst",
-  "Senior Financial Analyst",
-  "Operations Manager",
-  "UX Designer",
-  "Senior UX Designer",
-  "Data Scientist",
-  "DevOps Engineer",
-  "QA Engineer",
-  "Technical Lead",
-  "Business Analyst",
-  "Project Manager"
-];
-var FIRST_NAMES = [
-  "James",
-  "Mary",
-  "Robert",
-  "Patricia",
-  "John",
-  "Jennifer",
-  "Michael",
-  "Linda",
-  "David",
-  "Elizabeth",
-  "William",
-  "Barbara",
-  "Richard",
-  "Susan",
-  "Joseph",
-  "Jessica",
-  "Thomas",
-  "Sarah",
-  "Christopher",
-  "Karen",
-  "Priya",
-  "Rahul",
-  "Aisha",
-  "Chen",
-  "Yuki",
-  "Hans",
-  "Marie",
-  "Carlos",
-  "Fatima",
-  "Ahmed"
-];
-var LAST_NAMES = [
-  "Smith",
-  "Johnson",
-  "Williams",
-  "Brown",
-  "Jones",
-  "Garcia",
-  "Miller",
-  "Davis",
-  "Rodriguez",
-  "Martinez",
-  "Anderson",
-  "Taylor",
-  "Thomas",
-  "Hernandez",
-  "Moore",
-  "Martin",
-  "Jackson",
-  "Thompson",
-  "White",
-  "Lopez",
-  "Patel",
-  "Kumar",
-  "Singh",
-  "Weber",
-  "M\xFCller",
-  "Tanaka",
-  "Wang",
-  "Kim",
-  "Nakamura",
-  "Ali"
-];
-function generateDummyEmployees(count) {
-  const employees = [];
-  for (let i = 1; i <= count; i++) {
-    const firstName = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
-    const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
-    const department = DUMMY_DEPARTMENTS2[Math.floor(Math.random() * DUMMY_DEPARTMENTS2.length)];
-    const jobTitle = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
-    const salary = Math.round((3e4 + Math.random() * 22e4) * 100) / 100;
-    const year = 2015 + Math.floor(Math.random() * 11);
-    const month = String(1 + Math.floor(Math.random() * 12)).padStart(2, "0");
-    const day = String(1 + Math.floor(Math.random() * 28)).padStart(2, "0");
-    employees.push({
-      id: i,
-      first_name: firstName,
-      last_name: lastName,
-      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@company.com`,
-      job_title: jobTitle,
-      salary,
-      country_id: null,
-      country_name: "",
-      country_code: "",
-      department_id: department.id,
-      department_name: department.name,
-      hire_date: `${year}-${month}-${day}`
-    });
-  }
-  return employees;
-}
-var DUMMY_EMPLOYEES = generateDummyEmployees(150);
-
 // app/javascript/services/api.js
 var API_BASE = "/api/v1";
-var USE_DUMMY = true;
 async function request(path, options = {}) {
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
   const response = await fetch(`${API_BASE}${path}`, {
@@ -30260,81 +30132,33 @@ async function request(path, options = {}) {
   });
   if (!response.ok) {
     const error2 = await response.json().catch(() => ({}));
-    throw new Error(error2.message || `Request failed: ${response.status}`);
+    throw new Error(error2.errors?.join(", ") || error2.message || `Request failed: ${response.status}`);
   }
   return response.json();
 }
-async function fetchEmployees({ page = 1, perPage = 25, search = "", countryId = "", departmentId = "", sortBy = "id", sortDir = "asc" } = {}) {
-  if (USE_DUMMY) {
-    let data = [...DUMMY_EMPLOYEES];
-    if (search) {
-      const q = search.toLowerCase();
-      data = data.filter(
-        (e) => `${e.first_name} ${e.last_name}`.toLowerCase().includes(q) || e.email.toLowerCase().includes(q) || e.job_title.toLowerCase().includes(q)
-      );
-    }
-    if (countryId) data = data.filter((e) => e.country_id === Number(countryId));
-    if (departmentId) data = data.filter((e) => e.department_id === Number(departmentId));
-    data.sort((a, b) => {
-      let valA = a[sortBy];
-      let valB = b[sortBy];
-      if (typeof valA === "string") {
-        valA = valA.toLowerCase();
-        valB = valB.toLowerCase();
-      }
-      if (valA < valB) return sortDir === "asc" ? -1 : 1;
-      if (valA > valB) return sortDir === "asc" ? 1 : -1;
-      return 0;
-    });
-    const total = data.length;
-    const start2 = (page - 1) * perPage;
-    const employees = data.slice(start2, start2 + perPage);
-    return { employees, total, page, per_page: perPage, total_pages: Math.ceil(total / perPage) };
-  }
-  const params = new URLSearchParams({ page, per_page: perPage, search, country_id: countryId, department_id: departmentId, sort_by: sortBy, sort_dir: sortDir });
+async function fetchEmployees({ page = 1, perPage = 25, search = "", countryId = "", departmentName = "", sortBy = "id", sortDir = "asc" } = {}) {
+  const params = new URLSearchParams({ page, per_page: perPage, search, country_id: countryId, department_name: departmentName, sort_by: sortBy, sort_dir: sortDir });
   return request(`/employees?${params}`);
 }
 async function createEmployee(data) {
-  if (USE_DUMMY) {
-    const newId = Math.max(...DUMMY_EMPLOYEES.map((e) => e.id)) + 1;
-    const country = DUMMY_COUNTRIES.find((c) => c.id === Number(data.country_id));
-    const department = DUMMY_DEPARTMENTS.find((d) => d.id === Number(data.department_id));
-    const newEmp = {
-      id: newId,
-      ...data,
-      country_name: country?.name || "",
-      country_code: country?.code || "",
-      department_name: department?.name || ""
-    };
-    DUMMY_EMPLOYEES.unshift(newEmp);
-    return newEmp;
-  }
   return request("/employees", { method: "POST", body: JSON.stringify({ employee: data }) });
 }
 async function updateEmployee(id, data) {
-  if (USE_DUMMY) {
-    const idx = DUMMY_EMPLOYEES.findIndex((e) => e.id === Number(id));
-    if (idx === -1) throw new Error("Employee not found");
-    const country = DUMMY_COUNTRIES.find((c) => c.id === Number(data.country_id));
-    const department = DUMMY_DEPARTMENTS.find((d) => d.id === Number(data.department_id));
-    DUMMY_EMPLOYEES[idx] = {
-      ...DUMMY_EMPLOYEES[idx],
-      ...data,
-      country_name: country?.name || DUMMY_EMPLOYEES[idx].country_name,
-      country_code: country?.code || DUMMY_EMPLOYEES[idx].country_code,
-      department_name: department?.name || DUMMY_EMPLOYEES[idx].department_name
-    };
-    return DUMMY_EMPLOYEES[idx];
-  }
   return request(`/employees/${id}`, { method: "PATCH", body: JSON.stringify({ employee: data }) });
 }
 async function deleteEmployee(id) {
-  if (USE_DUMMY) {
-    const idx = DUMMY_EMPLOYEES.findIndex((e) => e.id === Number(id));
-    if (idx !== -1) DUMMY_EMPLOYEES.splice(idx, 1);
-    return { success: true };
-  }
   return request(`/employees/${id}`, { method: "DELETE" });
+}
+async function bulkImportEmployees(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetch(`${API_BASE}/employees/bulk_import`, {
+    method: "POST",
+    body: formData
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.errors?.join(", ") || "Import failed");
+  return data;
 }
 async function fetchCountries() {
   const data = await request("/countries");
@@ -30397,51 +30221,47 @@ async function bulkImportDepartments(file) {
   return data;
 }
 async function fetchSalaryInsights({ countryId = "" } = {}) {
-  if (USE_DUMMY) {
-    let data = [...DUMMY_EMPLOYEES];
-    if (countryId) data = data.filter((e) => e.country_id === Number(countryId));
-    const salaries = data.map((e) => e.salary);
-    const sorted = [...salaries].sort((a, b) => a - b);
-    const byCountry = {};
-    data.forEach((e) => {
-      if (!byCountry[e.country_name]) byCountry[e.country_name] = [];
-      byCountry[e.country_name].push(e.salary);
-    });
-    const countryInsights = Object.entries(byCountry).map(([country, sals]) => ({
-      country,
-      min_salary: Math.min(...sals),
-      max_salary: Math.max(...sals),
-      avg_salary: Math.round(sals.reduce((a, b) => a + b, 0) / sals.length),
-      employee_count: sals.length
-    }));
-    const byJobTitle = {};
-    data.forEach((e) => {
-      const key = `${e.job_title}|${e.country_name}`;
-      if (!byJobTitle[key]) byJobTitle[key] = { job_title: e.job_title, country: e.country_name, salaries: [] };
-      byJobTitle[key].salaries.push(e.salary);
-    });
-    const jobTitleInsights = Object.values(byJobTitle).map((item) => ({
-      job_title: item.job_title,
-      country: item.country,
-      avg_salary: Math.round(item.salaries.reduce((a, b) => a + b, 0) / item.salaries.length),
-      employee_count: item.salaries.length
-    }));
-    return {
-      by_country: countryInsights.sort((a, b) => b.employee_count - a.employee_count),
-      by_job_title: jobTitleInsights.sort((a, b) => b.avg_salary - a.avg_salary),
-      overall: {
-        total_employees: data.length,
-        avg_salary: salaries.length ? Math.round(salaries.reduce((a, b) => a + b, 0) / salaries.length) : 0,
-        min_salary: salaries.length ? Math.min(...salaries) : 0,
-        max_salary: salaries.length ? Math.max(...salaries) : 0,
-        total_departments: new Set(data.map((e) => e.department_name)).size,
-        total_countries: new Set(data.map((e) => e.country_name)).size
-      }
-    };
-  }
-  const params = new URLSearchParams();
-  if (countryId) params.set("country_id", countryId);
-  return request(`/salary_insights?${params}`);
+  const result = await fetchEmployees({ page: 1, perPage: 1e4, countryId });
+  const data = result.employees;
+  const salaries = data.map((e) => parseFloat(e.salary));
+  const byCountry = {};
+  data.forEach((e) => {
+    const name = e.country?.name || "Unknown";
+    if (!byCountry[name]) byCountry[name] = [];
+    byCountry[name].push(parseFloat(e.salary));
+  });
+  const countryInsights = Object.entries(byCountry).map(([country, sals]) => ({
+    country,
+    min_salary: Math.min(...sals),
+    max_salary: Math.max(...sals),
+    avg_salary: Math.round(sals.reduce((a, b) => a + b, 0) / sals.length),
+    employee_count: sals.length
+  }));
+  const byJobTitle = {};
+  data.forEach((e) => {
+    const countryName = e.country?.name || "Unknown";
+    const key = `${e.job_title}|${countryName}`;
+    if (!byJobTitle[key]) byJobTitle[key] = { job_title: e.job_title, country: countryName, salaries: [] };
+    byJobTitle[key].salaries.push(parseFloat(e.salary));
+  });
+  const jobTitleInsights = Object.values(byJobTitle).map((item) => ({
+    job_title: item.job_title,
+    country: item.country,
+    avg_salary: Math.round(item.salaries.reduce((a, b) => a + b, 0) / item.salaries.length),
+    employee_count: item.salaries.length
+  }));
+  return {
+    by_country: countryInsights.sort((a, b) => b.employee_count - a.employee_count),
+    by_job_title: jobTitleInsights.sort((a, b) => b.avg_salary - a.avg_salary),
+    overall: {
+      total_employees: data.length,
+      avg_salary: salaries.length ? Math.round(salaries.reduce((a, b) => a + b, 0) / salaries.length) : 0,
+      min_salary: salaries.length ? Math.min(...salaries) : 0,
+      max_salary: salaries.length ? Math.max(...salaries) : 0,
+      total_departments: new Set(data.map((e) => e.department?.name).filter(Boolean)).size,
+      total_countries: new Set(data.map((e) => e.country?.name).filter(Boolean)).size
+    }
+  };
 }
 
 // app/javascript/components/common/Pagination.jsx
@@ -30517,53 +30337,48 @@ function Modal({ title, children, onClose, footer }) {
 
 // app/javascript/components/Employees/EmployeeForm.jsx
 function EmployeeForm({ employee, countries, departments, onSave, onClose }) {
-  const isEdit = !!employee;
-  const [form, setForm] = (0, import_react5.useState)({
-    first_name: "",
-    last_name: "",
-    email: "",
-    job_title: "",
-    salary: "",
-    country_id: "",
-    department_id: "",
-    hire_date: ""
+  const [formData, setFormData] = (0, import_react5.useState)({
+    first_name: employee?.first_name || "",
+    last_name: employee?.last_name || "",
+    email: employee?.email || "",
+    phone: employee?.phone || "",
+    employee_code: employee?.employee_code || "",
+    department_id: employee?.department_id || employee?.department?.id || "",
+    country_id: employee?.country_id || employee?.country?.id || "",
+    job_title: employee?.job_title || "",
+    hire_date: employee?.hire_date || "",
+    salary: employee?.salary || "",
+    currency: employee?.currency || "USD",
+    active: employee?.active !== false
   });
-  (0, import_react5.useEffect)(() => {
-    if (employee) {
-      setForm({
-        first_name: employee.first_name || "",
-        last_name: employee.last_name || "",
-        email: employee.email || "",
-        job_title: employee.job_title || "",
-        salary: employee.salary || "",
-        country_id: employee.country_id || "",
-        department_id: employee.department_id || "",
-        hire_date: employee.hire_date || ""
-      });
-    }
-  }, [employee]);
+  const [errors, setErrors] = (0, import_react5.useState)([]);
   function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   }
   async function handleSubmit(e) {
     e.preventDefault();
-    const data = { ...form, salary: parseFloat(form.salary), country_id: parseInt(form.country_id), department_id: parseInt(form.department_id) };
-    if (isEdit) {
-      await updateEmployee(employee.id, data);
-    } else {
-      await createEmployee(data);
+    setErrors([]);
+    try {
+      if (employee) {
+        await updateEmployee(employee.id, formData);
+      } else {
+        await createEmployee(formData);
+      }
+      onSave();
+    } catch (err) {
+      setErrors([err.message]);
     }
-    onSave();
   }
   return /* @__PURE__ */ import_react5.default.createElement(
     Modal,
     {
-      title: isEdit ? "Edit Employee" : "Add Employee",
+      title: employee ? "Edit Employee" : "Add Employee",
       onClose,
-      footer: /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-secondary", onClick: onClose }, "Cancel"), /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-primary", onClick: handleSubmit }, isEdit ? "Update" : "Create"))
+      footer: /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-secondary", onClick: onClose }, "Cancel"), /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-primary", onClick: handleSubmit }, employee ? "Update" : "Create"))
     },
-    /* @__PURE__ */ import_react5.default.createElement("form", { onSubmit: handleSubmit }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-row" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "First Name"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "first_name", value: form.first_name, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Last Name"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "last_name", value: form.last_name, onChange: handleChange, required: true }))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Email"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "email", type: "email", value: form.email, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-row" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Job Title"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "job_title", value: form.job_title, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Salary ($)"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "salary", type: "number", step: "0.01", min: "0", value: form.salary, onChange: handleChange, required: true }))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-row" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Country"), /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-select", name: "country_id", value: form.country_id, onChange: handleChange, required: true }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "" }, "Select Country"), countries.map((c) => /* @__PURE__ */ import_react5.default.createElement("option", { key: c.id, value: c.id }, c.name)))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Department"), /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-select", name: "department_id", value: form.department_id, onChange: handleChange, required: true }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "" }, "Select Department"), departments.map((d) => /* @__PURE__ */ import_react5.default.createElement("option", { key: d.id, value: d.id }, d.name))))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Hire Date"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "hire_date", type: "date", value: form.hire_date, onChange: handleChange, required: true })))
+    errors.length > 0 && /* @__PURE__ */ import_react5.default.createElement("div", { style: { color: "var(--color-danger)", marginBottom: "var(--space-lg)", fontSize: "var(--font-size-sm)" } }, errors.map((err, i) => /* @__PURE__ */ import_react5.default.createElement("div", { key: i }, err))),
+    /* @__PURE__ */ import_react5.default.createElement("form", { onSubmit: handleSubmit }, /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-md)" } }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "First Name"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "first_name", value: formData.first_name, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Last Name"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "last_name", value: formData.last_name, onChange: handleChange, required: true }))), /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-md)" } }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Email"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "email", type: "email", value: formData.email, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Phone"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "phone", value: formData.phone, onChange: handleChange }))), /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-md)" } }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Employee Code"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "employee_code", value: formData.employee_code, onChange: handleChange, placeholder: "EMP001" })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Job Title"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "job_title", value: formData.job_title, onChange: handleChange, required: true }))), /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-md)" } }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Country"), /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-input", name: "country_id", value: formData.country_id, onChange: handleChange, required: true }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "" }, "Select Country"), countries.map((c) => /* @__PURE__ */ import_react5.default.createElement("option", { key: c.id, value: c.id }, c.name)))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Department"), /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-input", name: "department_id", value: formData.department_id, onChange: handleChange, required: true }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "" }, "Select Department"), departments.map((d) => /* @__PURE__ */ import_react5.default.createElement("option", { key: d.id, value: d.id }, d.name, " (", d.country?.name || "", ")"))))), /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "var(--space-md)" } }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Salary"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "salary", type: "number", step: "0.01", min: "0", value: formData.salary, onChange: handleChange, required: true })), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Currency"), /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-input", name: "currency", value: formData.currency, onChange: handleChange }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "USD" }, "USD"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "EUR" }, "EUR"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "GBP" }, "GBP"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "INR" }, "INR"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "JPY" }, "JPY"))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-label" }, "Hire Date"), /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-input", name: "hire_date", type: "date", value: formData.hire_date, onChange: handleChange, required: true }))), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-group", style: { display: "flex", alignItems: "center", gap: "var(--space-sm)" } }, /* @__PURE__ */ import_react5.default.createElement("input", { type: "checkbox", name: "active", checked: formData.active, onChange: handleChange, id: "emp-active" }), /* @__PURE__ */ import_react5.default.createElement("label", { htmlFor: "emp-active", className: "form-label", style: { margin: 0 } }, "Active")))
   );
 }
 
@@ -30578,14 +30393,6 @@ var DEPARTMENT_BADGE_MAP = {
   "Design": "badge-design",
   "Product": "badge-product"
 };
-var QUICK_FILTERS = [
-  { label: "All", value: "" },
-  { label: "High Salary (>150k)", value: "high_salary" },
-  { label: "Recent Hires", value: "recent" },
-  { label: "Engineering", value: "dept_engineering" },
-  { label: "Sales", value: "dept_sales" },
-  { label: "Marketing", value: "dept_marketing" }
-];
 function EmployeeList({ globalSearch }) {
   const [employees, setEmployees] = (0, import_react6.useState)([]);
   const [countries, setCountries] = (0, import_react6.useState)([]);
@@ -30599,14 +30406,34 @@ function EmployeeList({ globalSearch }) {
   const [departmentFilter, setDepartmentFilter] = (0, import_react6.useState)("");
   const [sortBy, setSortBy] = (0, import_react6.useState)("id");
   const [sortDir, setSortDir] = (0, import_react6.useState)("asc");
-  const [quickFilter, setQuickFilter] = (0, import_react6.useState)("");
   const [showForm, setShowForm] = (0, import_react6.useState)(false);
   const [editingEmployee, setEditingEmployee] = (0, import_react6.useState)(null);
   const [deleteTarget, setDeleteTarget] = (0, import_react6.useState)(null);
+  const [importResult, setImportResult] = (0, import_react6.useState)(null);
+  const [importing, setImporting] = (0, import_react6.useState)(false);
+  const fileInputRef = (0, import_react6.useRef)(null);
   const activeSearch = globalSearch || search;
   (0, import_react6.useEffect)(() => {
-    fetchCountries().then(setCountries).catch(() => setCountries([]));
-    fetchDepartments().then(setDepartments).catch(() => setDepartments([]));
+    fetchEmployees({ page: 1, perPage: 1e4 }).then((result) => {
+      const emps = result.employees || [];
+      const countryMap = /* @__PURE__ */ new Map();
+      emps.forEach((e) => {
+        if (e.country?.id && !countryMap.has(e.country.id)) {
+          countryMap.set(e.country.id, e.country);
+        }
+      });
+      setCountries([...countryMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
+      const deptMap = /* @__PURE__ */ new Map();
+      emps.forEach((e) => {
+        if (e.department?.id && !deptMap.has(e.department.name)) {
+          deptMap.set(e.department.name, e.department);
+        }
+      });
+      setDepartments([...deptMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
+    }).catch(() => {
+      setCountries([]);
+      setDepartments([]);
+    });
   }, []);
   (0, import_react6.useEffect)(() => {
     loadEmployees();
@@ -30615,33 +30442,25 @@ function EmployeeList({ globalSearch }) {
     setPage(1);
   }, [activeSearch, countryFilter, departmentFilter]);
   async function loadEmployees() {
-    const result = await fetchEmployees({
-      page,
-      perPage,
-      search: activeSearch,
-      countryId: countryFilter,
-      departmentId: departmentFilter,
-      sortBy,
-      sortDir
-    });
-    setEmployees(result.employees);
-    setTotal(result.total);
-    setTotalPages(result.total_pages);
-  }
-  const filteredEmployees = (0, import_react6.useMemo)(() => {
-    let data = [...employees];
-    if (quickFilter === "high_salary") {
-      data = data.filter((e) => e.salary > 15e4);
-    } else if (quickFilter === "recent") {
-      const cutoff = /* @__PURE__ */ new Date();
-      cutoff.setFullYear(cutoff.getFullYear() - 2);
-      data = data.filter((e) => new Date(e.hire_date) >= cutoff);
-    } else if (quickFilter.startsWith("dept_")) {
-      const dept = quickFilter.replace("dept_", "");
-      data = data.filter((e) => e.department_name.toLowerCase() === dept);
+    try {
+      const result = await fetchEmployees({
+        page,
+        perPage,
+        search: activeSearch,
+        countryId: countryFilter,
+        departmentName: departmentFilter,
+        sortBy,
+        sortDir
+      });
+      setEmployees(result.employees);
+      setTotal(result.total);
+      setTotalPages(result.total_pages);
+    } catch {
+      setEmployees([]);
+      setTotal(0);
+      setTotalPages(1);
     }
-    return data;
-  }, [employees, quickFilter]);
+  }
   function handleSort(column) {
     if (sortBy === column) {
       setSortDir((d) => d === "asc" ? "desc" : "asc");
@@ -30673,18 +30492,51 @@ function EmployeeList({ globalSearch }) {
     setEditingEmployee(null);
     loadEmployees();
   }
-  function formatSalary(val) {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 }).format(val);
+  async function handleImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const result = await bulkImportEmployees(file);
+      setImportResult(result);
+      loadEmployees();
+    } catch (err) {
+      setImportResult({ message: err.message, imported: 0, updated: 0, skipped: 0 });
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   }
-  return /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("h2", null, "Employees"), /* @__PURE__ */ import_react6.default.createElement("div", { className: "page-header-subtitle" }, total, " total employees")), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-primary", onClick: handleAdd }, "+ Add Employee")), /* @__PURE__ */ import_react6.default.createElement("div", { className: "quick-filters" }, QUICK_FILTERS.map((f) => /* @__PURE__ */ import_react6.default.createElement(
+  function formatSalary(val, currency = "USD") {
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: currency || "USD", minimumFractionDigits: 0 }).format(val);
+  }
+  return /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("h2", null, "Employees"), /* @__PURE__ */ import_react6.default.createElement("div", { className: "page-header-subtitle" }, total, " total employees")), /* @__PURE__ */ import_react6.default.createElement("div", { style: { display: "flex", gap: "var(--space-sm)" } }, /* @__PURE__ */ import_react6.default.createElement(
+    "input",
+    {
+      type: "file",
+      ref: fileInputRef,
+      accept: ".csv,.xlsx,.xls",
+      onChange: handleImport,
+      style: { display: "none" }
+    }
+  ), /* @__PURE__ */ import_react6.default.createElement(
     "button",
     {
-      key: f.value,
-      className: `quick-filter-btn ${quickFilter === f.value ? "active" : ""}`,
-      onClick: () => setQuickFilter(f.value === quickFilter ? "" : f.value)
+      className: "btn btn-secondary",
+      onClick: () => fileInputRef.current?.click(),
+      disabled: importing
     },
-    f.label
-  ))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "table-toolbar" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "table-search" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "search-icon" }, "\u{1F50D}"), /* @__PURE__ */ import_react6.default.createElement(
+    importing ? "Importing..." : "\u{1F4E5} Import CSV/Excel"
+  ), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-primary", onClick: handleAdd }, "+ Add Employee"))), importResult && /* @__PURE__ */ import_react6.default.createElement("div", { style: {
+    padding: "var(--space-md) var(--space-lg)",
+    marginBottom: "var(--space-lg)",
+    borderRadius: "var(--radius-md)",
+    fontSize: "var(--font-size-sm)",
+    background: importResult.imported > 0 || importResult.updated > 0 ? "#ecfdf5" : "#fef2f2",
+    color: importResult.imported > 0 || importResult.updated > 0 ? "#065f46" : "#991b1b",
+    border: `1px solid ${importResult.imported > 0 || importResult.updated > 0 ? "#a7f3d0" : "#fecaca"}`
+  } }, importResult.message, " \u2014 Imported: ", importResult.imported, ", Updated: ", importResult.updated || 0, ", Skipped: ", importResult.skipped, importResult.errors?.length > 0 && /* @__PURE__ */ import_react6.default.createElement("div", { style: { marginTop: "var(--space-xs)" } }, importResult.errors.map((err, i) => /* @__PURE__ */ import_react6.default.createElement("div", { key: i }, "\u2022 ", err)))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "table-toolbar" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "table-search" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "search-icon" }, "\u{1F50D}"), /* @__PURE__ */ import_react6.default.createElement(
     "input",
     {
       type: "text",
@@ -30700,7 +30552,7 @@ function EmployeeList({ globalSearch }) {
       onChange: (e) => setCountryFilter(e.target.value)
     },
     /* @__PURE__ */ import_react6.default.createElement("option", { value: "" }, "All Countries"),
-    countries.map((c) => /* @__PURE__ */ import_react6.default.createElement("option", { key: c.id, value: c.id }, c.name))
+    countries.map((c) => /* @__PURE__ */ import_react6.default.createElement("option", { key: c.id, value: c.id }, c.name, " (", c.code, ")"))
   ), /* @__PURE__ */ import_react6.default.createElement(
     "select",
     {
@@ -30709,8 +30561,8 @@ function EmployeeList({ globalSearch }) {
       onChange: (e) => setDepartmentFilter(e.target.value)
     },
     /* @__PURE__ */ import_react6.default.createElement("option", { value: "" }, "All Departments"),
-    departments.map((d) => /* @__PURE__ */ import_react6.default.createElement("option", { key: d.id, value: d.id }, d.name))
-  )), /* @__PURE__ */ import_react6.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "id" ? "sorted" : "", onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "first_name" ? "sorted" : "", onClick: () => handleSort("first_name") }, "Name ", renderSortIndicator("first_name")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "email" ? "sorted" : "", onClick: () => handleSort("email") }, "Email ", renderSortIndicator("email")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "job_title" ? "sorted" : "", onClick: () => handleSort("job_title") }, "Job Title ", renderSortIndicator("job_title")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "department_name" ? "sorted" : "", onClick: () => handleSort("department_name") }, "Department ", renderSortIndicator("department_name")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "country_name" ? "sorted" : "", onClick: () => handleSort("country_name") }, "Country ", renderSortIndicator("country_name")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "salary" ? "sorted" : "", onClick: () => handleSort("salary") }, "Salary ", renderSortIndicator("salary")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "hire_date" ? "sorted" : "", onClick: () => handleSort("hire_date") }, "Hire Date ", renderSortIndicator("hire_date")), /* @__PURE__ */ import_react6.default.createElement("th", null, "Actions"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, filteredEmployees.length === 0 ? /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("td", { colSpan: "9" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "empty-state-icon" }, "\u{1F4ED}"), "No employees found"))) : filteredEmployees.map((emp) => /* @__PURE__ */ import_react6.default.createElement("tr", { key: emp.id }, /* @__PURE__ */ import_react6.default.createElement("td", null, emp.id), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-name" }, emp.first_name, " ", emp.last_name), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-email" }, emp.email), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.job_title), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement("span", { className: `cell-badge ${DEPARTMENT_BADGE_MAP[emp.department_name] || ""}` }, emp.department_name)), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.country_name), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-salary" }, formatSalary(emp.salary)), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.hire_date), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement("div", { className: "actions-cell" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleEdit(emp) }, "Edit"), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-danger btn-sm", onClick: () => setDeleteTarget(emp) }, "Delete"))))))), /* @__PURE__ */ import_react6.default.createElement(
+    departments.map((d) => /* @__PURE__ */ import_react6.default.createElement("option", { key: d.name, value: d.name }, d.name))
+  )), /* @__PURE__ */ import_react6.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "id" ? "sorted" : "", onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "employee_code" ? "sorted" : "", onClick: () => handleSort("employee_code") }, "Code ", renderSortIndicator("employee_code")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "first_name" ? "sorted" : "", onClick: () => handleSort("first_name") }, "Name ", renderSortIndicator("first_name")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "email" ? "sorted" : "", onClick: () => handleSort("email") }, "Email ", renderSortIndicator("email")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "job_title" ? "sorted" : "", onClick: () => handleSort("job_title") }, "Job Title ", renderSortIndicator("job_title")), /* @__PURE__ */ import_react6.default.createElement("th", null, "Department"), /* @__PURE__ */ import_react6.default.createElement("th", null, "Country"), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "salary" ? "sorted" : "", onClick: () => handleSort("salary") }, "Salary ", renderSortIndicator("salary")), /* @__PURE__ */ import_react6.default.createElement("th", { className: sortBy === "hire_date" ? "sorted" : "", onClick: () => handleSort("hire_date") }, "Hire Date ", renderSortIndicator("hire_date")), /* @__PURE__ */ import_react6.default.createElement("th", null, "Actions"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, employees.length === 0 ? /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("td", { colSpan: "10" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "empty-state-icon" }, "\u{1F4ED}"), "No employees found"))) : employees.map((emp) => /* @__PURE__ */ import_react6.default.createElement("tr", { key: emp.id }, /* @__PURE__ */ import_react6.default.createElement("td", null, emp.id), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement("span", { className: "cell-badge badge-engineering" }, emp.employee_code || "\u2014")), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-name" }, emp.full_name || `${emp.first_name} ${emp.last_name}`), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-email" }, emp.email), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.job_title), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement("span", { className: `cell-badge ${DEPARTMENT_BADGE_MAP[emp.department?.name] || ""}` }, emp.department?.name || "\u2014")), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.country?.name || "\u2014"), /* @__PURE__ */ import_react6.default.createElement("td", { className: "cell-salary" }, formatSalary(emp.salary, emp.currency)), /* @__PURE__ */ import_react6.default.createElement("td", null, emp.hire_date), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement("div", { className: "actions-cell" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleEdit(emp) }, "Edit"), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-danger btn-sm", onClick: () => setDeleteTarget(emp) }, "Delete"))))))), /* @__PURE__ */ import_react6.default.createElement(
     Pagination,
     {
       page,

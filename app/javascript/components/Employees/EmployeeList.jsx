@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { fetchEmployees, deleteEmployee, fetchCountries, fetchDepartments } from "../../services/api";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { fetchEmployees, deleteEmployee, fetchCountries, fetchDepartments, bulkImportEmployees } from "../../services/api";
 import Pagination from "../common/Pagination";
 import EmployeeForm from "./EmployeeForm";
 import Modal from "../common/Modal";
@@ -15,15 +15,6 @@ const DEPARTMENT_BADGE_MAP = {
   "Product": "badge-product",
 };
 
-const QUICK_FILTERS = [
-  { label: "All", value: "" },
-  { label: "High Salary (>150k)", value: "high_salary" },
-  { label: "Recent Hires", value: "recent" },
-  { label: "Engineering", value: "dept_engineering" },
-  { label: "Sales", value: "dept_sales" },
-  { label: "Marketing", value: "dept_marketing" },
-];
-
 export default function EmployeeList({ globalSearch }) {
   const [employees, setEmployees] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -37,54 +28,64 @@ export default function EmployeeList({ globalSearch }) {
   const [departmentFilter, setDepartmentFilter] = useState("");
   const [sortBy, setSortBy] = useState("id");
   const [sortDir, setSortDir] = useState("asc");
-  const [quickFilter, setQuickFilter] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [importResult, setImportResult] = useState(null);
+  const [importing, setImporting] = useState(false);
+  const fileInputRef = useRef(null);
 
-  // Use global search if provided, else local search
   const activeSearch = globalSearch || search;
 
+  // Derive unique filter options from all employees (unfilterd fetch)
   useEffect(() => {
-    fetchCountries().then(setCountries).catch(() => setCountries([]));
-    fetchDepartments().then(setDepartments).catch(() => setDepartments([]));
+    fetchEmployees({ page: 1, perPage: 10000 })
+      .then(result => {
+        const emps = result.employees || [];
+        // Unique countries that have employees
+        const countryMap = new Map();
+        emps.forEach(e => {
+          if (e.country?.id && !countryMap.has(e.country.id)) {
+            countryMap.set(e.country.id, e.country);
+          }
+        });
+        setCountries([...countryMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
+        // Unique departments by name
+        const deptMap = new Map();
+        emps.forEach(e => {
+          if (e.department?.id && !deptMap.has(e.department.name)) {
+            deptMap.set(e.department.name, e.department);
+          }
+        });
+        setDepartments([...deptMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
+      })
+      .catch(() => { setCountries([]); setDepartments([]); });
   }, []);
 
   useEffect(() => {
     loadEmployees();
   }, [page, activeSearch, countryFilter, departmentFilter, sortBy, sortDir]);
 
-  // Reset page when filters change
   useEffect(() => {
     setPage(1);
   }, [activeSearch, countryFilter, departmentFilter]);
 
   async function loadEmployees() {
-    const result = await fetchEmployees({
-      page, perPage, search: activeSearch,
-      countryId: countryFilter, departmentId: departmentFilter,
-      sortBy, sortDir,
-    });
-    setEmployees(result.employees);
-    setTotal(result.total);
-    setTotalPages(result.total_pages);
-  }
-
-  // Apply quick filters on client side
-  const filteredEmployees = useMemo(() => {
-    let data = [...employees];
-    if (quickFilter === "high_salary") {
-      data = data.filter(e => e.salary > 150000);
-    } else if (quickFilter === "recent") {
-      const cutoff = new Date();
-      cutoff.setFullYear(cutoff.getFullYear() - 2);
-      data = data.filter(e => new Date(e.hire_date) >= cutoff);
-    } else if (quickFilter.startsWith("dept_")) {
-      const dept = quickFilter.replace("dept_", "");
-      data = data.filter(e => e.department_name.toLowerCase() === dept);
+    try {
+      const result = await fetchEmployees({
+        page, perPage, search: activeSearch,
+        countryId: countryFilter, departmentName: departmentFilter,
+        sortBy, sortDir,
+      });
+      setEmployees(result.employees);
+      setTotal(result.total);
+      setTotalPages(result.total_pages);
+    } catch {
+      setEmployees([]);
+      setTotal(0);
+      setTotalPages(1);
     }
-    return data;
-  }, [employees, quickFilter]);
+  }
 
   function handleSort(column) {
     if (sortBy === column) {
@@ -123,8 +124,25 @@ export default function EmployeeList({ globalSearch }) {
     loadEmployees();
   }
 
-  function formatSalary(val) {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 }).format(val);
+  async function handleImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const result = await bulkImportEmployees(file);
+      setImportResult(result);
+      loadEmployees();
+    } catch (err) {
+      setImportResult({ message: err.message, imported: 0, updated: 0, skipped: 0 });
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
+  function formatSalary(val, currency = "USD") {
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: currency || "USD", minimumFractionDigits: 0 }).format(val);
   }
 
   return (
@@ -134,21 +152,43 @@ export default function EmployeeList({ globalSearch }) {
           <h2>Employees</h2>
           <div className="page-header-subtitle">{total} total employees</div>
         </div>
-        <button className="btn btn-primary" onClick={handleAdd}>+ Add Employee</button>
+        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".csv,.xlsx,.xls"
+            onChange={handleImport}
+            style={{ display: "none" }}
+          />
+          <button
+            className="btn btn-secondary"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importing}
+          >
+            {importing ? "Importing..." : "📥 Import CSV/Excel"}
+          </button>
+          <button className="btn btn-primary" onClick={handleAdd}>+ Add Employee</button>
+        </div>
       </div>
 
-      {/* Quick Filter Buttons */}
-      <div className="quick-filters">
-        {QUICK_FILTERS.map(f => (
-          <button
-            key={f.value}
-            className={`quick-filter-btn ${quickFilter === f.value ? "active" : ""}`}
-            onClick={() => setQuickFilter(f.value === quickFilter ? "" : f.value)}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+      {importResult && (
+        <div style={{
+          padding: "var(--space-md) var(--space-lg)",
+          marginBottom: "var(--space-lg)",
+          borderRadius: "var(--radius-md)",
+          fontSize: "var(--font-size-sm)",
+          background: importResult.imported > 0 || importResult.updated > 0 ? "#ecfdf5" : "#fef2f2",
+          color: importResult.imported > 0 || importResult.updated > 0 ? "#065f46" : "#991b1b",
+          border: `1px solid ${importResult.imported > 0 || importResult.updated > 0 ? "#a7f3d0" : "#fecaca"}`
+        }}>
+          {importResult.message} — Imported: {importResult.imported}, Updated: {importResult.updated || 0}, Skipped: {importResult.skipped}
+          {importResult.errors?.length > 0 && (
+            <div style={{ marginTop: "var(--space-xs)" }}>
+              {importResult.errors.map((err, i) => <div key={i}>• {err}</div>)}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Table Toolbar */}
       <div className="table-toolbar">
@@ -167,7 +207,7 @@ export default function EmployeeList({ globalSearch }) {
           onChange={e => setCountryFilter(e.target.value)}
         >
           <option value="">All Countries</option>
-          {countries.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          {countries.map(c => <option key={c.id} value={c.id}>{c.name} ({c.code})</option>)}
         </select>
         <select
           className="table-filter-select"
@@ -175,7 +215,7 @@ export default function EmployeeList({ globalSearch }) {
           onChange={e => setDepartmentFilter(e.target.value)}
         >
           <option value="">All Departments</option>
-          {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+          {departments.map(d => <option key={d.name} value={d.name}>{d.name}</option>)}
         </select>
       </div>
 
@@ -187,6 +227,9 @@ export default function EmployeeList({ globalSearch }) {
               <th className={sortBy === "id" ? "sorted" : ""} onClick={() => handleSort("id")}>
                 ID {renderSortIndicator("id")}
               </th>
+              <th className={sortBy === "employee_code" ? "sorted" : ""} onClick={() => handleSort("employee_code")}>
+                Code {renderSortIndicator("employee_code")}
+              </th>
               <th className={sortBy === "first_name" ? "sorted" : ""} onClick={() => handleSort("first_name")}>
                 Name {renderSortIndicator("first_name")}
               </th>
@@ -196,12 +239,8 @@ export default function EmployeeList({ globalSearch }) {
               <th className={sortBy === "job_title" ? "sorted" : ""} onClick={() => handleSort("job_title")}>
                 Job Title {renderSortIndicator("job_title")}
               </th>
-              <th className={sortBy === "department_name" ? "sorted" : ""} onClick={() => handleSort("department_name")}>
-                Department {renderSortIndicator("department_name")}
-              </th>
-              <th className={sortBy === "country_name" ? "sorted" : ""} onClick={() => handleSort("country_name")}>
-                Country {renderSortIndicator("country_name")}
-              </th>
+              <th>Department</th>
+              <th>Country</th>
               <th className={sortBy === "salary" ? "sorted" : ""} onClick={() => handleSort("salary")}>
                 Salary {renderSortIndicator("salary")}
               </th>
@@ -212,9 +251,9 @@ export default function EmployeeList({ globalSearch }) {
             </tr>
           </thead>
           <tbody>
-            {filteredEmployees.length === 0 ? (
+            {employees.length === 0 ? (
               <tr>
-                <td colSpan="9">
+                <td colSpan="10">
                   <div className="empty-state">
                     <div className="empty-state-icon">📭</div>
                     No employees found
@@ -222,19 +261,20 @@ export default function EmployeeList({ globalSearch }) {
                 </td>
               </tr>
             ) : (
-              filteredEmployees.map(emp => (
+              employees.map(emp => (
                 <tr key={emp.id}>
                   <td>{emp.id}</td>
-                  <td className="cell-name">{emp.first_name} {emp.last_name}</td>
+                  <td><span className="cell-badge badge-engineering">{emp.employee_code || "—"}</span></td>
+                  <td className="cell-name">{emp.full_name || `${emp.first_name} ${emp.last_name}`}</td>
                   <td className="cell-email">{emp.email}</td>
                   <td>{emp.job_title}</td>
                   <td>
-                    <span className={`cell-badge ${DEPARTMENT_BADGE_MAP[emp.department_name] || ""}`}>
-                      {emp.department_name}
+                    <span className={`cell-badge ${DEPARTMENT_BADGE_MAP[emp.department?.name] || ""}`}>
+                      {emp.department?.name || "—"}
                     </span>
                   </td>
-                  <td>{emp.country_name}</td>
-                  <td className="cell-salary">{formatSalary(emp.salary)}</td>
+                  <td>{emp.country?.name || "—"}</td>
+                  <td className="cell-salary">{formatSalary(emp.salary, emp.currency)}</td>
                   <td>{emp.hire_date}</td>
                   <td>
                     <div className="actions-cell">

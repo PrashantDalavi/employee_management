@@ -1,0 +1,11 @@
+first_name,last_name,email,phone,employee_code,job_title,salary,currency,hire_date,country_code,department_code,active
+James,Smith,james.smith@company.com,+1-555-0101,EMP001,Software Engineer,95000,USD,2022-03-15,US,ENG,true
+Mary,Johnson,mary.johnson@company.com,+1-555-0102,EMP002,Marketing Manager,88000,USD,2021-06-01,US,MKT,true
+Robert,Williams,robert.williams@company.com,+1-555-0103,EMP003,Sales Representative,72000,USD,2023-01-10,US,SAL,true
+Patricia,Brown,patricia.brown@company.com,+1-555-0104,EMP004,HR Specialist,78000,USD,2020-09-20,US,HR,true
+Priya,Patel,priya.patel@company.com,+91-98765-43210,EMP005,Senior Software Engineer,120000,USD,2019-04-01,IN,ENG,true
+Rahul,Kumar,rahul.kumar@company.com,+91-98765-43211,EMP006,Product Manager,110000,USD,2020-11-15,IN,MKT,true
+Aisha,Singh,aisha.singh@company.com,+91-98765-43212,EMP007,Financial Analyst,85000,USD,2022-07-01,IN,FIN,true
+Hans,Weber,hans.weber@company.com,+49-170-1234567,EMP008,DevOps Engineer,98000,USD,2021-02-01,DE,ENG,true
+Marie,Mueller,marie.mueller@company.com,+49-170-1234568,EMP009,UX Designer,82000,USD,2023-05-15,DE,FIN,true
+John,Taylor,john.taylor@company.com,+44-7700-900100,EMP010,Technical Lead,135000,USD,2018-01-10,GB,ENG,true
