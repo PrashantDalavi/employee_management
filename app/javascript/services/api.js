@@ -1,5 +1,5 @@
 // API service layer — currently uses dummy data, swap to real endpoints later
-import { DUMMY_EMPLOYEES, DUMMY_DEPARTMENTS } from "../data/dummyData";
+import { DUMMY_EMPLOYEES } from "../data/dummyData";
 
 const API_BASE = "/api/v1";
 const USE_DUMMY = true; // Toggle this to false when backend is ready
@@ -158,8 +158,40 @@ export async function bulkImportCountries(file) {
 // --- DEPARTMENTS ---
 
 export async function fetchDepartments() {
-  if (USE_DUMMY) return DUMMY_DEPARTMENTS;
-  return request("/departments");
+  const data = await request("/departments");
+  return data.departments;
+}
+
+export async function createDepartment(departmentData) {
+  return request("/departments", {
+    method: "POST",
+    body: JSON.stringify({ department: departmentData }),
+  });
+}
+
+export async function updateDepartment(id, departmentData) {
+  return request(`/departments/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ department: departmentData }),
+  });
+}
+
+export async function deleteDepartment(id) {
+  return request(`/departments/${id}`, { method: "DELETE" });
+}
+
+export async function bulkImportDepartments(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(`${API_BASE}/departments/bulk_import`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.errors?.join(", ") || "Import failed");
+  return data;
 }
 
 // --- SALARY INSIGHTS ---

@@ -30119,7 +30119,7 @@ function Header({ globalSearch, onGlobalSearchChange }) {
 var import_react6 = __toESM(require_react());
 
 // app/javascript/data/dummyData.js
-var DUMMY_DEPARTMENTS = [
+var DUMMY_DEPARTMENTS2 = [
   { id: 1, name: "Engineering" },
   { id: 2, name: "Marketing" },
   { id: 3, name: "Sales" },
@@ -30220,7 +30220,7 @@ function generateDummyEmployees(count) {
   for (let i = 1; i <= count; i++) {
     const firstName = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
     const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
-    const department = DUMMY_DEPARTMENTS[Math.floor(Math.random() * DUMMY_DEPARTMENTS.length)];
+    const department = DUMMY_DEPARTMENTS2[Math.floor(Math.random() * DUMMY_DEPARTMENTS2.length)];
     const jobTitle = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
     const salary = Math.round((3e4 + Math.random() * 22e4) * 100) / 100;
     const year = 2015 + Math.floor(Math.random() * 11);
@@ -30367,8 +30367,34 @@ async function bulkImportCountries(file) {
   return data;
 }
 async function fetchDepartments() {
-  if (USE_DUMMY) return DUMMY_DEPARTMENTS;
-  return request("/departments");
+  const data = await request("/departments");
+  return data.departments;
+}
+async function createDepartment(departmentData) {
+  return request("/departments", {
+    method: "POST",
+    body: JSON.stringify({ department: departmentData })
+  });
+}
+async function updateDepartment(id, departmentData) {
+  return request(`/departments/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ department: departmentData })
+  });
+}
+async function deleteDepartment(id) {
+  return request(`/departments/${id}`, { method: "DELETE" });
+}
+async function bulkImportDepartments(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetch(`${API_BASE}/departments/bulk_import`, {
+    method: "POST",
+    body: formData
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.errors?.join(", ") || "Import failed");
+  return data;
 }
 async function fetchSalaryInsights({ countryId = "" } = {}) {
   if (USE_DUMMY) {
@@ -30875,27 +30901,52 @@ function CountriesList({ globalSearch }) {
 var import_react8 = __toESM(require_react());
 function DepartmentsList({ globalSearch }) {
   const [departments, setDepartments] = (0, import_react8.useState)([]);
+  const [countries, setCountries] = (0, import_react8.useState)([]);
+  const [search, setSearch] = (0, import_react8.useState)("");
+  const [countryFilter, setCountryFilter] = (0, import_react8.useState)("");
+  const [statusFilter, setStatusFilter] = (0, import_react8.useState)("");
   const [sortBy, setSortBy] = (0, import_react8.useState)("name");
   const [sortDir, setSortDir] = (0, import_react8.useState)("asc");
-  const BADGE_MAP = {
-    "Engineering": "badge-engineering",
-    "Marketing": "badge-marketing",
-    "Sales": "badge-sales",
-    "Human Resources": "badge-hr",
-    "Finance": "badge-finance",
-    "Operations": "badge-operations",
-    "Design": "badge-design",
-    "Product": "badge-product"
-  };
+  const [showForm, setShowForm] = (0, import_react8.useState)(false);
+  const [editingDepartment, setEditingDepartment] = (0, import_react8.useState)(null);
+  const [deleteTarget, setDeleteTarget] = (0, import_react8.useState)(null);
+  const [formData, setFormData] = (0, import_react8.useState)({ name: "", code: "", country_id: "", description: "", active: true });
+  const [formErrors, setFormErrors] = (0, import_react8.useState)([]);
+  const [importResult, setImportResult] = (0, import_react8.useState)(null);
+  const [importing, setImporting] = (0, import_react8.useState)(false);
+  const fileInputRef = (0, import_react8.useRef)(null);
   (0, import_react8.useEffect)(() => {
-    fetchDepartments().then(setDepartments);
+    loadDepartments();
+    fetchCountries().then(setCountries).catch(() => setCountries([]));
   }, []);
+  async function loadDepartments() {
+    try {
+      const data = await fetchDepartments();
+      setDepartments(data);
+    } catch {
+      setDepartments([]);
+    }
+  }
+  const activeSearch = globalSearch || search;
   const filtered = departments.filter((d) => {
-    if (!globalSearch) return true;
-    return d.name.toLowerCase().includes(globalSearch.toLowerCase());
+    if (activeSearch) {
+      const q = activeSearch.toLowerCase();
+      const matches = d.name.toLowerCase().includes(q) || d.code.toLowerCase().includes(q) || (d.description || "").toLowerCase().includes(q) || (d.country?.name || "").toLowerCase().includes(q);
+      if (!matches) return false;
+    }
+    if (countryFilter && String(d.country?.id) !== countryFilter) return false;
+    if (statusFilter === "active" && d.active === false) return false;
+    if (statusFilter === "inactive" && d.active !== false) return false;
+    return true;
   }).sort((a, b) => {
-    const valA = a[sortBy]?.toLowerCase?.() || a[sortBy];
-    const valB = b[sortBy]?.toLowerCase?.() || b[sortBy];
+    let valA, valB;
+    if (sortBy === "country_name") {
+      valA = (a.country?.name || "").toLowerCase();
+      valB = (b.country?.name || "").toLowerCase();
+    } else {
+      valA = typeof a[sortBy] === "string" ? a[sortBy].toLowerCase() : a[sortBy];
+      valB = typeof b[sortBy] === "string" ? b[sortBy].toLowerCase() : b[sortBy];
+    }
     if (valA < valB) return sortDir === "asc" ? -1 : 1;
     if (valA > valB) return sortDir === "asc" ? 1 : -1;
     return 0;
@@ -30911,7 +30962,145 @@ function DepartmentsList({ globalSearch }) {
     if (sortBy !== col) return /* @__PURE__ */ import_react8.default.createElement("span", { className: "sort-indicator" }, "\u2195");
     return /* @__PURE__ */ import_react8.default.createElement("span", { className: "sort-indicator" }, sortDir === "asc" ? "\u2191" : "\u2193");
   }
-  return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("h2", null, "Departments"), /* @__PURE__ */ import_react8.default.createElement("div", { className: "page-header-subtitle" }, filtered.length, " departments"))), /* @__PURE__ */ import_react8.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react8.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react8.default.createElement("thead", null, /* @__PURE__ */ import_react8.default.createElement("tr", null, /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("name") }, "Name ", renderSortIndicator("name")))), /* @__PURE__ */ import_react8.default.createElement("tbody", null, filtered.length === 0 ? /* @__PURE__ */ import_react8.default.createElement("tr", null, /* @__PURE__ */ import_react8.default.createElement("td", { colSpan: "2" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "empty-state-icon" }, "\u{1F3E2}"), "No departments found"))) : filtered.map((d) => /* @__PURE__ */ import_react8.default.createElement("tr", { key: d.id }, /* @__PURE__ */ import_react8.default.createElement("td", null, d.id), /* @__PURE__ */ import_react8.default.createElement("td", null, /* @__PURE__ */ import_react8.default.createElement("span", { className: `cell-badge ${BADGE_MAP[d.name] || ""}` }, d.name))))))));
+  function handleAdd() {
+    setEditingDepartment(null);
+    setFormData({ name: "", code: "", country_id: "", description: "", active: true });
+    setFormErrors([]);
+    setShowForm(true);
+  }
+  function handleEdit(dept) {
+    setEditingDepartment(dept);
+    setFormData({
+      name: dept.name,
+      code: dept.code,
+      country_id: dept.country_id || dept.country?.id || "",
+      description: dept.description || "",
+      active: dept.active !== false
+    });
+    setFormErrors([]);
+    setShowForm(true);
+  }
+  function handleFormChange(e) {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  }
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    setFormErrors([]);
+    try {
+      if (editingDepartment) {
+        await updateDepartment(editingDepartment.id, formData);
+      } else {
+        await createDepartment(formData);
+      }
+      setShowForm(false);
+      setEditingDepartment(null);
+      loadDepartments();
+    } catch (err) {
+      setFormErrors([err.message]);
+    }
+  }
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    try {
+      await deleteDepartment(deleteTarget.id);
+      setDeleteTarget(null);
+      loadDepartments();
+    } catch (err) {
+      setFormErrors([err.message]);
+    }
+  }
+  function closeForm() {
+    setShowForm(false);
+    setEditingDepartment(null);
+    setFormErrors([]);
+  }
+  async function handleImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const result = await bulkImportDepartments(file);
+      setImportResult(result);
+      loadDepartments();
+    } catch (err) {
+      setImportResult({ message: err.message, imported: 0, updated: 0, skipped: 0 });
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+  return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("h2", null, "Departments"), /* @__PURE__ */ import_react8.default.createElement("div", { className: "page-header-subtitle" }, filtered.length, " departments")), /* @__PURE__ */ import_react8.default.createElement("div", { style: { display: "flex", gap: "var(--space-sm)" } }, /* @__PURE__ */ import_react8.default.createElement(
+    "input",
+    {
+      type: "file",
+      ref: fileInputRef,
+      accept: ".csv,.xlsx,.xls",
+      onChange: handleImport,
+      style: { display: "none" }
+    }
+  ), /* @__PURE__ */ import_react8.default.createElement(
+    "button",
+    {
+      className: "btn btn-secondary",
+      onClick: () => fileInputRef.current?.click(),
+      disabled: importing
+    },
+    importing ? "Importing..." : "\u{1F4E5} Import CSV/Excel"
+  ), /* @__PURE__ */ import_react8.default.createElement("button", { className: "btn btn-primary", onClick: handleAdd }, "+ Add Department"))), importResult && /* @__PURE__ */ import_react8.default.createElement("div", { style: {
+    padding: "var(--space-md) var(--space-lg)",
+    marginBottom: "var(--space-lg)",
+    borderRadius: "var(--radius-md)",
+    fontSize: "var(--font-size-sm)",
+    background: importResult.imported > 0 || importResult.updated > 0 ? "#ecfdf5" : "#fef2f2",
+    color: importResult.imported > 0 || importResult.updated > 0 ? "#065f46" : "#991b1b",
+    border: `1px solid ${importResult.imported > 0 || importResult.updated > 0 ? "#a7f3d0" : "#fecaca"}`
+  } }, importResult.message, " \u2014 Imported: ", importResult.imported, ", Updated: ", importResult.updated || 0, ", Skipped: ", importResult.skipped, importResult.errors?.length > 0 && /* @__PURE__ */ import_react8.default.createElement("div", { style: { marginTop: "var(--space-xs)" } }, importResult.errors.map((err, i) => /* @__PURE__ */ import_react8.default.createElement("div", { key: i }, "\u2022 ", err)))), /* @__PURE__ */ import_react8.default.createElement("div", { className: "table-toolbar" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "table-search" }, /* @__PURE__ */ import_react8.default.createElement("span", { className: "search-icon" }, "\u{1F50D}"), /* @__PURE__ */ import_react8.default.createElement(
+    "input",
+    {
+      type: "text",
+      placeholder: "Search by name, code, description...",
+      value: search,
+      onChange: (e) => setSearch(e.target.value)
+    }
+  )), /* @__PURE__ */ import_react8.default.createElement(
+    "select",
+    {
+      className: "table-filter-select",
+      value: countryFilter,
+      onChange: (e) => setCountryFilter(e.target.value)
+    },
+    /* @__PURE__ */ import_react8.default.createElement("option", { value: "" }, "All Countries"),
+    countries.map((c) => /* @__PURE__ */ import_react8.default.createElement("option", { key: c.id, value: c.id }, c.name))
+  ), /* @__PURE__ */ import_react8.default.createElement(
+    "select",
+    {
+      className: "table-filter-select",
+      value: statusFilter,
+      onChange: (e) => setStatusFilter(e.target.value)
+    },
+    /* @__PURE__ */ import_react8.default.createElement("option", { value: "" }, "All Status"),
+    /* @__PURE__ */ import_react8.default.createElement("option", { value: "active" }, "Active"),
+    /* @__PURE__ */ import_react8.default.createElement("option", { value: "inactive" }, "Inactive")
+  )), /* @__PURE__ */ import_react8.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react8.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react8.default.createElement("thead", null, /* @__PURE__ */ import_react8.default.createElement("tr", null, /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("name") }, "Name ", renderSortIndicator("name")), /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("code") }, "Code ", renderSortIndicator("code")), /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("country_name") }, "Country ", renderSortIndicator("country_name")), /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("description") }, "Description ", renderSortIndicator("description")), /* @__PURE__ */ import_react8.default.createElement("th", { onClick: () => handleSort("active") }, "Status ", renderSortIndicator("active")), /* @__PURE__ */ import_react8.default.createElement("th", null, "Actions"))), /* @__PURE__ */ import_react8.default.createElement("tbody", null, filtered.length === 0 ? /* @__PURE__ */ import_react8.default.createElement("tr", null, /* @__PURE__ */ import_react8.default.createElement("td", { colSpan: "7" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "empty-state-icon" }, "\u{1F3E2}"), "No departments found"))) : filtered.map((d) => /* @__PURE__ */ import_react8.default.createElement("tr", { key: d.id }, /* @__PURE__ */ import_react8.default.createElement("td", null, d.id), /* @__PURE__ */ import_react8.default.createElement("td", { className: "cell-name" }, d.name), /* @__PURE__ */ import_react8.default.createElement("td", null, /* @__PURE__ */ import_react8.default.createElement("span", { className: "cell-badge badge-engineering" }, d.code)), /* @__PURE__ */ import_react8.default.createElement("td", null, d.country?.name || "\u2014"), /* @__PURE__ */ import_react8.default.createElement("td", null, d.description || "\u2014"), /* @__PURE__ */ import_react8.default.createElement("td", null, /* @__PURE__ */ import_react8.default.createElement("span", { className: `cell-badge ${d.active !== false ? "badge-finance" : "badge-hr"}` }, d.active !== false ? "Active" : "Inactive")), /* @__PURE__ */ import_react8.default.createElement("td", null, /* @__PURE__ */ import_react8.default.createElement("div", { className: "actions-cell" }, /* @__PURE__ */ import_react8.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleEdit(d) }, "Edit"), /* @__PURE__ */ import_react8.default.createElement("button", { className: "btn btn-danger btn-sm", onClick: () => setDeleteTarget(d) }, "Delete")))))))), showForm && /* @__PURE__ */ import_react8.default.createElement(
+    Modal,
+    {
+      title: editingDepartment ? "Edit Department" : "Add Department",
+      onClose: closeForm,
+      footer: /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement("button", { className: "btn btn-secondary", onClick: closeForm }, "Cancel"), /* @__PURE__ */ import_react8.default.createElement("button", { className: "btn btn-primary", onClick: handleFormSubmit }, editingDepartment ? "Update" : "Create"))
+    },
+    formErrors.length > 0 && /* @__PURE__ */ import_react8.default.createElement("div", { style: { color: "var(--color-danger)", marginBottom: "var(--space-lg)", fontSize: "var(--font-size-sm)" } }, formErrors.map((err, i) => /* @__PURE__ */ import_react8.default.createElement("div", { key: i }, err))),
+    /* @__PURE__ */ import_react8.default.createElement("form", { onSubmit: handleFormSubmit }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react8.default.createElement("label", { className: "form-label" }, "Name"), /* @__PURE__ */ import_react8.default.createElement("input", { className: "form-input", name: "name", value: formData.name, onChange: handleFormChange, required: true })), /* @__PURE__ */ import_react8.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react8.default.createElement("label", { className: "form-label" }, "Code"), /* @__PURE__ */ import_react8.default.createElement("input", { className: "form-input", name: "code", value: formData.code, onChange: handleFormChange, required: true, maxLength: 10 })), /* @__PURE__ */ import_react8.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react8.default.createElement("label", { className: "form-label" }, "Country"), /* @__PURE__ */ import_react8.default.createElement("select", { className: "form-input", name: "country_id", value: formData.country_id, onChange: handleFormChange, required: true }, /* @__PURE__ */ import_react8.default.createElement("option", { value: "" }, "Select Country"), countries.map((c) => /* @__PURE__ */ import_react8.default.createElement("option", { key: c.id, value: c.id }, c.name)))), /* @__PURE__ */ import_react8.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react8.default.createElement("label", { className: "form-label" }, "Description"), /* @__PURE__ */ import_react8.default.createElement("textarea", { className: "form-input", name: "description", value: formData.description, onChange: handleFormChange, rows: 3 })), /* @__PURE__ */ import_react8.default.createElement("div", { className: "form-group", style: { display: "flex", alignItems: "center", gap: "var(--space-sm)" } }, /* @__PURE__ */ import_react8.default.createElement("input", { type: "checkbox", name: "active", checked: formData.active, onChange: handleFormChange, id: "dept-active" }), /* @__PURE__ */ import_react8.default.createElement("label", { htmlFor: "dept-active", className: "form-label", style: { margin: 0 } }, "Active")))
+  ), deleteTarget && /* @__PURE__ */ import_react8.default.createElement(
+    Modal,
+    {
+      title: "Delete Department",
+      onClose: () => setDeleteTarget(null),
+      footer: /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement("button", { className: "btn btn-secondary", onClick: () => setDeleteTarget(null) }, "Cancel"), /* @__PURE__ */ import_react8.default.createElement("button", { className: "btn btn-danger", onClick: handleDelete }, "Delete"))
+    },
+    /* @__PURE__ */ import_react8.default.createElement("p", { className: "confirm-text" }, "Are you sure you want to delete ", /* @__PURE__ */ import_react8.default.createElement("strong", null, deleteTarget.name, " (", deleteTarget.code, ")"), "?")
+  ));
 }
 
 // app/javascript/components/Insights/InsightsDashboard.jsx

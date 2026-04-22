@@ -6,6 +6,11 @@ Rails.application.routes.draw do
           post :bulk_import
         end
       end
+      resources :departments do
+        collection do
+          post :bulk_import
+        end
+      end
     end
   end
   get "up" => "rails/health#show", as: :rails_health_check
