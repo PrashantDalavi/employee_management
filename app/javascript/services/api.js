@@ -138,55 +138,7 @@ export async function bulkImportDepartments(file) {
 // --- SALARY INSIGHTS ---
 
 export async function fetchSalaryInsights({ countryId = "" } = {}) {
-  // Fetch all employees for insights (large page)
-  const result = await fetchEmployees({ page: 1, perPage: 10000, countryId });
-  const data = result.employees;
-
-  const salaries = data.map(e => parseFloat(e.salary));
-
-  // By country
-  const byCountry = {};
-  data.forEach(e => {
-    const name = e.country?.name || "Unknown";
-    if (!byCountry[name]) byCountry[name] = [];
-    byCountry[name].push(parseFloat(e.salary));
-  });
-
-  const countryInsights = Object.entries(byCountry).map(([country, sals]) => ({
-    country,
-    min_salary: Math.min(...sals),
-    max_salary: Math.max(...sals),
-    avg_salary: Math.round(sals.reduce((a, b) => a + b, 0) / sals.length),
-    employee_count: sals.length,
-  }));
-
-  // By job title
-  const byJobTitle = {};
-  data.forEach(e => {
-    const countryName = e.country?.name || "Unknown";
-    const key = `${e.job_title}|${countryName}`;
-    if (!byJobTitle[key]) byJobTitle[key] = { job_title: e.job_title, country: countryName, salaries: [] };
-    byJobTitle[key].salaries.push(parseFloat(e.salary));
-  });
-
-  const jobTitleInsights = Object.values(byJobTitle).map(item => ({
-    job_title: item.job_title,
-    country: item.country,
-    avg_salary: Math.round(item.salaries.reduce((a, b) => a + b, 0) / item.salaries.length),
-    employee_count: item.salaries.length,
-  }));
-
-  return {
-    by_country: countryInsights.sort((a, b) => b.employee_count - a.employee_count),
-    by_job_title: jobTitleInsights.sort((a, b) => b.avg_salary - a.avg_salary),
-    overall: {
-      total_employees: data.length,
-      avg_salary: salaries.length ? Math.round(salaries.reduce((a, b) => a + b, 0) / salaries.length) : 0,
-      min_salary: salaries.length ? Math.min(...salaries) : 0,
-      max_salary: salaries.length ? Math.max(...salaries) : 0,
-      total_departments: new Set(data.map(e => e.department?.name).filter(Boolean)).size,
-      total_countries: new Set(data.map(e => e.country?.name).filter(Boolean)).size,
-    },
-  };
+  const params = new URLSearchParams();
+  if (countryId) params.set("country_id", countryId);
+  return request(`/salary_insights?${params}`);
 }
-

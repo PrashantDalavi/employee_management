@@ -16,6 +16,7 @@ Rails.application.routes.draw do
           post :bulk_import
         end
       end
+      get :salary_insights, to: "insights#salary"
     end
   end
   get "up" => "rails/health#show", as: :rails_health_check
