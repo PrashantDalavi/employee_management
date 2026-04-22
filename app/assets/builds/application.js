@@ -30119,16 +30119,6 @@ function Header({ globalSearch, onGlobalSearchChange }) {
 var import_react6 = __toESM(require_react());
 
 // app/javascript/data/dummyData.js
-var DUMMY_COUNTRIES = [
-  { id: 1, name: "United States", code: "US" },
-  { id: 2, name: "India", code: "IN" },
-  { id: 3, name: "United Kingdom", code: "GB" },
-  { id: 4, name: "Germany", code: "DE" },
-  { id: 5, name: "Canada", code: "CA" },
-  { id: 6, name: "Australia", code: "AU" },
-  { id: 7, name: "France", code: "FR" },
-  { id: 8, name: "Japan", code: "JP" }
-];
 var DUMMY_DEPARTMENTS = [
   { id: 1, name: "Engineering" },
   { id: 2, name: "Marketing" },
@@ -30230,7 +30220,6 @@ function generateDummyEmployees(count) {
   for (let i = 1; i <= count; i++) {
     const firstName = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
     const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
-    const country = DUMMY_COUNTRIES[Math.floor(Math.random() * DUMMY_COUNTRIES.length)];
     const department = DUMMY_DEPARTMENTS[Math.floor(Math.random() * DUMMY_DEPARTMENTS.length)];
     const jobTitle = JOB_TITLES[Math.floor(Math.random() * JOB_TITLES.length)];
     const salary = Math.round((3e4 + Math.random() * 22e4) * 100) / 100;
@@ -30244,9 +30233,9 @@ function generateDummyEmployees(count) {
       email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@company.com`,
       job_title: jobTitle,
       salary,
-      country_id: country.id,
-      country_name: country.name,
-      country_code: country.code,
+      country_id: null,
+      country_name: "",
+      country_code: "",
       department_id: department.id,
       department_name: department.name,
       hire_date: `${year}-${month}-${day}`
@@ -30348,8 +30337,34 @@ async function deleteEmployee(id) {
   return request(`/employees/${id}`, { method: "DELETE" });
 }
 async function fetchCountries() {
-  if (USE_DUMMY) return DUMMY_COUNTRIES;
-  return request("/countries");
+  const data = await request("/countries");
+  return data.countries;
+}
+async function createCountry(countryData) {
+  return request("/countries", {
+    method: "POST",
+    body: JSON.stringify({ country: countryData })
+  });
+}
+async function updateCountry(id, countryData) {
+  return request(`/countries/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ country: countryData })
+  });
+}
+async function deleteCountry(id) {
+  return request(`/countries/${id}`, { method: "DELETE" });
+}
+async function bulkImportCountries(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetch(`${API_BASE}/countries/bulk_import`, {
+    method: "POST",
+    body: formData
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.errors?.join(", ") || "Import failed");
+  return data;
 }
 async function fetchDepartments() {
   if (USE_DUMMY) return DUMMY_DEPARTMENTS;
@@ -30564,8 +30579,8 @@ function EmployeeList({ globalSearch }) {
   const [deleteTarget, setDeleteTarget] = (0, import_react6.useState)(null);
   const activeSearch = globalSearch || search;
   (0, import_react6.useEffect)(() => {
-    fetchCountries().then(setCountries);
-    fetchDepartments().then(setDepartments);
+    fetchCountries().then(setCountries).catch(() => setCountries([]));
+    fetchDepartments().then(setDepartments).catch(() => setDepartments([]));
   }, []);
   (0, import_react6.useEffect)(() => {
     loadEmployees();
@@ -30707,16 +30722,32 @@ function CountriesList({ globalSearch }) {
   const [countries, setCountries] = (0, import_react7.useState)([]);
   const [sortBy, setSortBy] = (0, import_react7.useState)("name");
   const [sortDir, setSortDir] = (0, import_react7.useState)("asc");
+  const [showForm, setShowForm] = (0, import_react7.useState)(false);
+  const [editingCountry, setEditingCountry] = (0, import_react7.useState)(null);
+  const [deleteTarget, setDeleteTarget] = (0, import_react7.useState)(null);
+  const [formData, setFormData] = (0, import_react7.useState)({ name: "", code: "" });
+  const [formErrors, setFormErrors] = (0, import_react7.useState)([]);
+  const [importResult, setImportResult] = (0, import_react7.useState)(null);
+  const [importing, setImporting] = (0, import_react7.useState)(false);
+  const fileInputRef = (0, import_react7.useRef)(null);
   (0, import_react7.useEffect)(() => {
-    fetchCountries().then(setCountries);
+    loadCountries();
   }, []);
+  async function loadCountries() {
+    try {
+      const data = await fetchCountries();
+      setCountries(data);
+    } catch {
+      setCountries([]);
+    }
+  }
   const filtered = countries.filter((c) => {
     if (!globalSearch) return true;
     const q = globalSearch.toLowerCase();
     return c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
   }).sort((a, b) => {
-    const valA = a[sortBy]?.toLowerCase?.() || a[sortBy];
-    const valB = b[sortBy]?.toLowerCase?.() || b[sortBy];
+    const valA = typeof a[sortBy] === "string" ? a[sortBy].toLowerCase() : a[sortBy];
+    const valB = typeof b[sortBy] === "string" ? b[sortBy].toLowerCase() : b[sortBy];
     if (valA < valB) return sortDir === "asc" ? -1 : 1;
     if (valA > valB) return sortDir === "asc" ? 1 : -1;
     return 0;
@@ -30732,7 +30763,112 @@ function CountriesList({ globalSearch }) {
     if (sortBy !== col) return /* @__PURE__ */ import_react7.default.createElement("span", { className: "sort-indicator" }, "\u2195");
     return /* @__PURE__ */ import_react7.default.createElement("span", { className: "sort-indicator" }, sortDir === "asc" ? "\u2191" : "\u2193");
   }
-  return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "Countries"), /* @__PURE__ */ import_react7.default.createElement("div", { className: "page-header-subtitle" }, filtered.length, " countries"))), /* @__PURE__ */ import_react7.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react7.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react7.default.createElement("thead", null, /* @__PURE__ */ import_react7.default.createElement("tr", null, /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("name") }, "Name ", renderSortIndicator("name")), /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("code") }, "Code ", renderSortIndicator("code")))), /* @__PURE__ */ import_react7.default.createElement("tbody", null, filtered.length === 0 ? /* @__PURE__ */ import_react7.default.createElement("tr", null, /* @__PURE__ */ import_react7.default.createElement("td", { colSpan: "3" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "empty-state-icon" }, "\u{1F30D}"), "No countries found"))) : filtered.map((c) => /* @__PURE__ */ import_react7.default.createElement("tr", { key: c.id }, /* @__PURE__ */ import_react7.default.createElement("td", null, c.id), /* @__PURE__ */ import_react7.default.createElement("td", { className: "cell-name" }, c.name), /* @__PURE__ */ import_react7.default.createElement("td", null, /* @__PURE__ */ import_react7.default.createElement("span", { className: "cell-badge badge-engineering" }, c.code))))))));
+  function handleAdd() {
+    setEditingCountry(null);
+    setFormData({ name: "", code: "" });
+    setFormErrors([]);
+    setShowForm(true);
+  }
+  function handleEdit(country) {
+    setEditingCountry(country);
+    setFormData({ name: country.name, code: country.code });
+    setFormErrors([]);
+    setShowForm(true);
+  }
+  function handleFormChange(e) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    setFormErrors([]);
+    try {
+      if (editingCountry) {
+        await updateCountry(editingCountry.id, formData);
+      } else {
+        await createCountry(formData);
+      }
+      setShowForm(false);
+      setEditingCountry(null);
+      loadCountries();
+    } catch (err) {
+      setFormErrors([err.message]);
+    }
+  }
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    try {
+      await deleteCountry(deleteTarget.id);
+      setDeleteTarget(null);
+      loadCountries();
+    } catch (err) {
+      setFormErrors([err.message]);
+    }
+  }
+  function closeForm() {
+    setShowForm(false);
+    setEditingCountry(null);
+    setFormErrors([]);
+  }
+  async function handleImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const result = await bulkImportCountries(file);
+      setImportResult(result);
+      loadCountries();
+    } catch (err) {
+      setImportResult({ message: err.message, imported: 0, skipped: 0 });
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+  return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("div", { className: "page-header" }, /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "Countries"), /* @__PURE__ */ import_react7.default.createElement("div", { className: "page-header-subtitle" }, filtered.length, " countries")), /* @__PURE__ */ import_react7.default.createElement("div", { style: { display: "flex", gap: "var(--space-sm)" } }, /* @__PURE__ */ import_react7.default.createElement(
+    "input",
+    {
+      type: "file",
+      ref: fileInputRef,
+      accept: ".csv,.xlsx,.xls",
+      onChange: handleImport,
+      style: { display: "none" }
+    }
+  ), /* @__PURE__ */ import_react7.default.createElement(
+    "button",
+    {
+      className: "btn btn-secondary",
+      onClick: () => fileInputRef.current?.click(),
+      disabled: importing
+    },
+    importing ? "Importing..." : "\u{1F4E5} Import CSV/Excel"
+  ), /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-primary", onClick: handleAdd }, "+ Add Country"))), importResult && /* @__PURE__ */ import_react7.default.createElement("div", { style: {
+    padding: "var(--space-md) var(--space-lg)",
+    marginBottom: "var(--space-lg)",
+    borderRadius: "var(--radius-md)",
+    fontSize: "var(--font-size-sm)",
+    background: importResult.imported > 0 ? "#ecfdf5" : "#fef2f2",
+    color: importResult.imported > 0 ? "#065f46" : "#991b1b",
+    border: `1px solid ${importResult.imported > 0 ? "#a7f3d0" : "#fecaca"}`
+  } }, importResult.message, " \u2014 Imported: ", importResult.imported, ", Updated: ", importResult.updated || 0, ", Skipped: ", importResult.skipped, importResult.errors?.length > 0 && /* @__PURE__ */ import_react7.default.createElement("div", { style: { marginTop: "var(--space-xs)" } }, importResult.errors.map((err, i) => /* @__PURE__ */ import_react7.default.createElement("div", { key: i }, "\u2022 ", err)))), /* @__PURE__ */ import_react7.default.createElement("div", { className: "data-table-wrapper" }, /* @__PURE__ */ import_react7.default.createElement("table", { className: "data-table" }, /* @__PURE__ */ import_react7.default.createElement("thead", null, /* @__PURE__ */ import_react7.default.createElement("tr", null, /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("id") }, "ID ", renderSortIndicator("id")), /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("name") }, "Name ", renderSortIndicator("name")), /* @__PURE__ */ import_react7.default.createElement("th", { onClick: () => handleSort("code") }, "Code ", renderSortIndicator("code")), /* @__PURE__ */ import_react7.default.createElement("th", null, "Actions"))), /* @__PURE__ */ import_react7.default.createElement("tbody", null, filtered.length === 0 ? /* @__PURE__ */ import_react7.default.createElement("tr", null, /* @__PURE__ */ import_react7.default.createElement("td", { colSpan: "4" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "empty-state" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "empty-state-icon" }, "\u{1F30D}"), "No countries found"))) : filtered.map((c) => /* @__PURE__ */ import_react7.default.createElement("tr", { key: c.id }, /* @__PURE__ */ import_react7.default.createElement("td", null, c.id), /* @__PURE__ */ import_react7.default.createElement("td", { className: "cell-name" }, c.name), /* @__PURE__ */ import_react7.default.createElement("td", null, /* @__PURE__ */ import_react7.default.createElement("span", { className: "cell-badge badge-engineering" }, c.code)), /* @__PURE__ */ import_react7.default.createElement("td", null, /* @__PURE__ */ import_react7.default.createElement("div", { className: "actions-cell" }, /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => handleEdit(c) }, "Edit"), /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-danger btn-sm", onClick: () => setDeleteTarget(c) }, "Delete")))))))), showForm && /* @__PURE__ */ import_react7.default.createElement(
+    Modal,
+    {
+      title: editingCountry ? "Edit Country" : "Add Country",
+      onClose: closeForm,
+      footer: /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-secondary", onClick: closeForm }, "Cancel"), /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-primary", onClick: handleFormSubmit }, editingCountry ? "Update" : "Create"))
+    },
+    formErrors.length > 0 && /* @__PURE__ */ import_react7.default.createElement("div", { style: { color: "var(--color-danger)", marginBottom: "var(--space-lg)", fontSize: "var(--font-size-sm)" } }, formErrors.map((err, i) => /* @__PURE__ */ import_react7.default.createElement("div", { key: i }, err))),
+    /* @__PURE__ */ import_react7.default.createElement("form", { onSubmit: handleFormSubmit }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react7.default.createElement("label", { className: "form-label" }, "Name"), /* @__PURE__ */ import_react7.default.createElement("input", { className: "form-input", name: "name", value: formData.name, onChange: handleFormChange, required: true })), /* @__PURE__ */ import_react7.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react7.default.createElement("label", { className: "form-label" }, "Code"), /* @__PURE__ */ import_react7.default.createElement("input", { className: "form-input", name: "code", value: formData.code, onChange: handleFormChange, required: true, maxLength: 5 })))
+  ), deleteTarget && /* @__PURE__ */ import_react7.default.createElement(
+    Modal,
+    {
+      title: "Delete Country",
+      onClose: () => setDeleteTarget(null),
+      footer: /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-secondary", onClick: () => setDeleteTarget(null) }, "Cancel"), /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-danger", onClick: handleDelete }, "Delete"))
+    },
+    /* @__PURE__ */ import_react7.default.createElement("p", { className: "confirm-text" }, "Are you sure you want to delete ", /* @__PURE__ */ import_react7.default.createElement("strong", null, deleteTarget.name, " (", deleteTarget.code, ")"), "?")
+  ));
 }
 
 // app/javascript/components/Departments/DepartmentsList.jsx

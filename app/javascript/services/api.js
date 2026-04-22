@@ -1,5 +1,5 @@
 // API service layer — currently uses dummy data, swap to real endpoints later
-import { DUMMY_EMPLOYEES, DUMMY_COUNTRIES, DUMMY_DEPARTMENTS } from "../data/dummyData";
+import { DUMMY_EMPLOYEES, DUMMY_DEPARTMENTS } from "../data/dummyData";
 
 const API_BASE = "/api/v1";
 const USE_DUMMY = true; // Toggle this to false when backend is ready
@@ -119,8 +119,40 @@ export async function deleteEmployee(id) {
 // --- COUNTRIES ---
 
 export async function fetchCountries() {
-  if (USE_DUMMY) return DUMMY_COUNTRIES;
-  return request("/countries");
+  const data = await request("/countries");
+  return data.countries;
+}
+
+export async function createCountry(countryData) {
+  return request("/countries", {
+    method: "POST",
+    body: JSON.stringify({ country: countryData }),
+  });
+}
+
+export async function updateCountry(id, countryData) {
+  return request(`/countries/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ country: countryData }),
+  });
+}
+
+export async function deleteCountry(id) {
+  return request(`/countries/${id}`, { method: "DELETE" });
+}
+
+export async function bulkImportCountries(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(`${API_BASE}/countries/bulk_import`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.errors?.join(", ") || "Import failed");
+  return data;
 }
 
 // --- DEPARTMENTS ---

@@ -46,8 +46,8 @@ export default function EmployeeList({ globalSearch }) {
   const activeSearch = globalSearch || search;
 
   useEffect(() => {
-    fetchCountries().then(setCountries);
-    fetchDepartments().then(setDepartments);
+    fetchCountries().then(setCountries).catch(() => setCountries([]));
+    fetchDepartments().then(setDepartments).catch(() => setDepartments([]));
   }, []);
 
   useEffect(() => {
