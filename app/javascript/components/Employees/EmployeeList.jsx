@@ -37,29 +37,17 @@ export default function EmployeeList({ globalSearch }) {
 
   const activeSearch = globalSearch || search;
 
-  // Derive unique filter options from all employees (unfilterd fetch)
+  // Fetch filter options from dedicated endpoints
   useEffect(() => {
-    fetchEmployees({ page: 1, perPage: 10000 })
-      .then(result => {
-        const emps = result.employees || [];
-        // Unique countries that have employees
-        const countryMap = new Map();
-        emps.forEach(e => {
-          if (e.country?.id && !countryMap.has(e.country.id)) {
-            countryMap.set(e.country.id, e.country);
-          }
-        });
-        setCountries([...countryMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
-        // Unique departments by name
-        const deptMap = new Map();
-        emps.forEach(e => {
-          if (e.department?.id && !deptMap.has(e.department.name)) {
-            deptMap.set(e.department.name, e.department);
-          }
-        });
-        setDepartments([...deptMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
+    fetchCountries()
+      .then(data => setCountries(data.sort((a, b) => a.name.localeCompare(b.name))))
+      .catch(() => setCountries([]));
+    fetchDepartments()
+      .then(data => {
+        const unique = [...new Map(data.map(d => [d.name, d])).values()];
+        setDepartments(unique.sort((a, b) => a.name.localeCompare(b.name)));
       })
-      .catch(() => { setCountries([]); setDepartments([]); });
+      .catch(() => setDepartments([]));
   }, []);
 
   useEffect(() => {

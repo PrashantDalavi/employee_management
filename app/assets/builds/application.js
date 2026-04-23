@@ -30376,26 +30376,11 @@ function EmployeeList({ globalSearch }) {
   const fileInputRef = (0, import_react6.useRef)(null);
   const activeSearch = globalSearch || search;
   (0, import_react6.useEffect)(() => {
-    fetchEmployees({ page: 1, perPage: 1e4 }).then((result) => {
-      const emps = result.employees || [];
-      const countryMap = /* @__PURE__ */ new Map();
-      emps.forEach((e) => {
-        if (e.country?.id && !countryMap.has(e.country.id)) {
-          countryMap.set(e.country.id, e.country);
-        }
-      });
-      setCountries([...countryMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
-      const deptMap = /* @__PURE__ */ new Map();
-      emps.forEach((e) => {
-        if (e.department?.id && !deptMap.has(e.department.name)) {
-          deptMap.set(e.department.name, e.department);
-        }
-      });
-      setDepartments([...deptMap.values()].sort((a, b) => a.name.localeCompare(b.name)));
-    }).catch(() => {
-      setCountries([]);
-      setDepartments([]);
-    });
+    fetchCountries().then((data) => setCountries(data.sort((a, b) => a.name.localeCompare(b.name)))).catch(() => setCountries([]));
+    fetchDepartments().then((data) => {
+      const unique = [...new Map(data.map((d) => [d.name, d])).values()];
+      setDepartments(unique.sort((a, b) => a.name.localeCompare(b.name)));
+    }).catch(() => setDepartments([]));
   }, []);
   (0, import_react6.useEffect)(() => {
     loadEmployees();
