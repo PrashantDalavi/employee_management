@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# Logs
+log/*
+
+# Temp files
+tmp/*
+
+# Node modules (rebuilt in container)
+node_modules
+
+# Editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+
+# Docker
+docker-compose*.yml
+Dockerfile
+
+# CI
+.github
+
+# Test & dev artifacts
+coverage/
+spec/
+.rspec
+
+# Sample files (not needed in production image)
+sample_files/

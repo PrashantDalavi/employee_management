@@ -73,4 +73,9 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Clear any cached HSTS policy from the browser (fixes HTTPS redirect on localhost)
+  config.action_dispatch.default_headers.merge!(
+    "Strict-Transport-Security" => "max-age=0"
+  )
 end
