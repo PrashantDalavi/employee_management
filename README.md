@@ -1,5 +1,7 @@
 # Employee Salary Management
 
+Live Url: https://employee-management-vpmd.onrender.com/
+
 A full-stack employee salary management tool built with Rails 7.1 and React. Manage countries, departments, and employees with bulk CSV/Excel import support and real-time salary analytics.
 
 ## Tech Stack
